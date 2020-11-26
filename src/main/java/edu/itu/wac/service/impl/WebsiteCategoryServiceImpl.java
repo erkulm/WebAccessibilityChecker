@@ -32,8 +32,8 @@ public class WebsiteCategoryServiceImpl implements WebsiteCategoryService {
     }
 
     @Override
-    public WebsiteCategory findByName(String name) {
+    public WebsiteCategoryResponse findByName(String name) {
         Optional<WebsiteCategory> websiteCategory = websiteCategoryRepository.findByName(name);
-        return websiteCategory.orElse(null);
+        return mapperFacade.map(websiteCategory, WebsiteCategoryResponse.class);
     }
 }

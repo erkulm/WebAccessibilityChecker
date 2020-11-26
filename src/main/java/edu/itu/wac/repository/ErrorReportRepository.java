@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface ErrorReportRepository extends MongoRepository<Error, String> {
 
-    Error findByWebsite_Address(String websiteAddress);
+    List<Error> findAllByWebsite_Address(String websiteAddress);
     List<Error> findAll();
+    List<Error> findAllByWebsite_Id(String websiteId);
+    List<Error> findAllByWebsite_AddressContains(String websiteAddress);
 }

@@ -1,7 +1,5 @@
 package edu.itu.wac.controller;
 
-import edu.itu.wac.entity.WebsiteCategory;
-import edu.itu.wac.repository.WebsiteCategoryRepository;
 import edu.itu.wac.service.WebsiteCategoryService;
 import edu.itu.wac.service.response.WebsiteCategoryResponse;
 import ma.glasnost.orika.MapperFacade;

@@ -1,6 +1,5 @@
 package edu.itu.wac.service.response;
 
-import edu.itu.wac.entity.WebsiteCategory;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -9,7 +8,7 @@ import java.time.LocalDateTime;
 public class WebsiteResponse {
     String id;
     String address;
-    WebsiteCategory category;
+    WebsiteCategoryResponse category;
     Integer clickCount;
     String fileName;
     Boolean isRead;

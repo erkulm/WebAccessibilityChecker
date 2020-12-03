@@ -19,9 +19,9 @@ import java.util.Optional;
 
 @Service
 public class WebsiteServiceImpl implements WebsiteService {
-    private static WebsiteCategoryRepository websiteCategoryRepository;
-    private static WebsiteRepository websiteRepository;
-    private static MapperFacade mapperFacade;
+    private final WebsiteCategoryRepository websiteCategoryRepository;
+    private final WebsiteRepository websiteRepository;
+    private final MapperFacade mapperFacade;
 
     @Autowired
     public WebsiteServiceImpl(WebsiteCategoryRepository websiteCategoryRepository,
@@ -43,5 +43,20 @@ public class WebsiteServiceImpl implements WebsiteService {
     public WebsiteResponse findByAddress(String address) {
         Optional<Website> website = websiteRepository.findByAddress(address);
         return mapperFacade.map(website.orElse(null), WebsiteResponse.class);
+    }
+
+    @Override
+    public WebsiteResponse createNewWebsiteFromAddress(String address){
+        Optional<Website> oldWebsite = websiteRepository.findByAddress(address);
+        if (oldWebsite.isEmpty()){
+            Optional<WebsiteCategory> general = websiteCategoryRepository.findByName("GENERAL");
+            Website website = new Website();
+            website.setAddress(address);
+            general.ifPresent(website::setCategory);
+            website = websiteRepository.save(website);
+            return mapperFacade.map(website,WebsiteResponse.class);
+        }else{
+            return mapperFacade.map(oldWebsite.get(),WebsiteResponse.class);
+        }
     }
 }

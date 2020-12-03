@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service;
 public interface WebsiteService {
     WebsiteResponse save(WebsiteRequest websiteRequest);
     WebsiteResponse findByAddress(String address);
+    WebsiteResponse createNewWebsiteFromAddress(String address);
 }

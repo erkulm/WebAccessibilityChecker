@@ -26,10 +26,10 @@ import java.util.List;
 
 @RestController
 public class ErrorRestController {
-    private static WebsiteCategoryService websiteCategoryService;
-    private static WebsiteService websiteService;
-    private static ErrorService errorService;
-    private static MapperFacade mapperFacade;
+    private final WebsiteCategoryService websiteCategoryService;
+    private final WebsiteService websiteService;
+    private final ErrorService errorService;
+    private final MapperFacade mapperFacade;
 
     @Autowired
     public ErrorRestController(WebsiteCategoryService websiteCategoryService,
@@ -53,18 +53,11 @@ public class ErrorRestController {
     List<ErrorResponse> generateNewReport(@RequestParam @NotNull String address) {
         WebsiteResponse websiteResponse = websiteService.findByAddress(address);
         if (websiteResponse == null){
-            WebsiteRequest websiteRequest = new WebsiteRequest();
-            websiteRequest.setAddress(address);
-            WebsiteCategoryRequest category = new WebsiteCategoryRequest();
-            category.setName("general");
-            WebsiteCategoryResponse savedCategory = websiteCategoryService.save(category);
-            websiteRequest.setCategory(mapperFacade.map(savedCategory, WebsiteCategory.class));
-            websiteResponse = websiteService.save(websiteRequest);
-
+           websiteResponse = websiteService.createNewWebsiteFromAddress(address);
         }
         List<Error> errors = Pa11yUtil.runPa11y(
                                mapperFacade.map(websiteResponse, Website.class),
-                          "", websiteResponse.getCategory());
+                          "", mapperFacade.map(websiteResponse.getCategory(),WebsiteCategory.class));
         errors.forEach(error -> errorService.save(mapperFacade.map(error, ErrorRequest.class)));
         return errorService.findByWebsiteAddress(address);
     }

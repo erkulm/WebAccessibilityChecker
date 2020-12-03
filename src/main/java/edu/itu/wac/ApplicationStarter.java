@@ -33,12 +33,12 @@ public class ApplicationStarter {
         websiteRepository.deleteAll();
         websiteCategoryRepository.deleteAll();
         errorReportRepository.deleteAll();
-        String kafeinAddress = "https://www.kafein.com/";
-        Website kafeinWebsite = websiteRepository.findByAddress(kafeinAddress).orElseGet(() -> getNewWebsite(kafeinAddress));
-        List<Error> error = Pa11yUtil.runPa11y(kafeinWebsite, "", kafeinWebsite.getCategory());
-        errorReportRepository.saveAll(error);
-        List<Error> allErrors = errorReportRepository.findAll();
-        allErrors.forEach(System.out::println);
+//        String kafeinAddress = "https://www.kafein.com/";
+//        Website kafeinWebsite = websiteRepository.findByAddress(kafeinAddress).orElseGet(() -> getNewWebsite(kafeinAddress));
+//        List<Error> error = Pa11yUtil.runPa11y(kafeinWebsite, "", kafeinWebsite.getCategory());
+//        errorReportRepository.saveAll(error);
+//        List<Error> allErrors = errorReportRepository.findAll();
+//        allErrors.forEach(System.out::println);
 
 
 //

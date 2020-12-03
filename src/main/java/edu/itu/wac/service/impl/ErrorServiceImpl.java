@@ -6,6 +6,7 @@ import edu.itu.wac.service.ErrorService;
 import edu.itu.wac.service.WebsiteCategoryService;
 import edu.itu.wac.service.WebsiteService;
 import edu.itu.wac.service.request.ErrorRequest;
+import edu.itu.wac.service.request.WebsiteRequest;
 import edu.itu.wac.service.response.ErrorResponse;
 import edu.itu.wac.service.response.WebsiteResponse;
 import ma.glasnost.orika.MapperFacade;
@@ -17,10 +18,10 @@ import java.util.List;
 
 @Service
 public class ErrorServiceImpl implements ErrorService {
-    private static WebsiteService websiteService;
-    private static WebsiteCategoryService websiteCategoryService;
-    private static ErrorReportRepository errorReportRepository;
-    private static MapperFacade mapperFacade;
+    private final WebsiteService websiteService;
+    private final WebsiteCategoryService websiteCategoryService;
+    private final ErrorReportRepository errorReportRepository;
+    private final MapperFacade mapperFacade;
 
     @Autowired
     public ErrorServiceImpl(WebsiteService websiteService,
@@ -43,7 +44,11 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     public List<ErrorResponse> findByWebsiteAddress(String address) {
         WebsiteResponse website = websiteService.findByAddress(address);
-        List<Error> errors = errorReportRepository.findAllByWebsite_Id(website.getId());
-        return mapperFacade.mapAsList(errors, ErrorResponse.class);
+        if (website!=null) {
+            List<Error> errors = errorReportRepository.findAllByWebsite_Id(website.getId());
+            return mapperFacade.mapAsList(errors, ErrorResponse.class);
+        }else{
+            return null;
+        }
     }
 }

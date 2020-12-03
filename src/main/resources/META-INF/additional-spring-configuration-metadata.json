@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "pa11y.path",
+      "type": "java.lang.String",
+      "description": "Description for pa11y.path."
+    },
+    {
+      "name": "test.min.day.difference",
+      "type": "java.lang.Integer",
+      "description": "Description for test.min.day.difference."
+    }
+  ] }

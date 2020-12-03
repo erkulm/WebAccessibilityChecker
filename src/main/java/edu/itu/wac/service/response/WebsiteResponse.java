@@ -14,4 +14,6 @@ public class WebsiteResponse {
     Boolean isRead;
     String subUrl;
     LocalDateTime dateCreated;
+    LocalDateTime dateModified;
+    LocalDateTime latestTestDate;
 }

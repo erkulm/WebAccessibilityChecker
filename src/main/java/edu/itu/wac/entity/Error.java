@@ -1,11 +1,12 @@
 package edu.itu.wac.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Document
 @Data
@@ -23,6 +24,7 @@ public class Error {
     @DBRef(lazy = true)
     WebsiteCategory category;
     String errorAddress;
-    Timestamp testCrDate;
+    @CreatedDate
+    LocalDateTime testCrDate;
     Integer subPageErrorCount;
 }

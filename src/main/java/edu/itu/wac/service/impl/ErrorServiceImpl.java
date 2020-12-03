@@ -51,4 +51,11 @@ public class ErrorServiceImpl implements ErrorService {
             return null;
         }
     }
+
+    @Override
+    public List<ErrorResponse> saveAll(List<ErrorRequest> errorRequests) {
+        List<Error> errors = mapperFacade.mapAsList(errorRequests, Error.class);
+        errors = errorReportRepository.saveAll(errors);
+        return mapperFacade.mapAsList(errors, ErrorResponse.class);
+    }
 }

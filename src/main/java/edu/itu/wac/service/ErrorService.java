@@ -12,4 +12,5 @@ import java.util.List;
 public interface ErrorService {
     ErrorResponse save(ErrorRequest errorRequest);
     List<ErrorResponse> findByWebsiteAddress(String address);
+    List<ErrorResponse> saveAll(List<ErrorRequest> errorRequests);
 }

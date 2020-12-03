@@ -3,6 +3,8 @@ package edu.itu.wac.util;
 import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.entity.WebsiteCategory;
+import org.apache.commons.lang3.SystemUtils;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Pa11yUtil {
+
+    @Value("${pa11y.path}")
+    private static String pa11yPath;
 
     public static List<Error> runPa11y(Website website, String subUrl, WebsiteCategory category) {
         List<Error> error = new ArrayList<>();
@@ -20,7 +25,13 @@ public class Pa11yUtil {
         String errorAddress = null;
         String errorScene;
         String document = null;
-        ProcessBuilder builder = new ProcessBuilder("pa11y", website.getAddress());
+        ProcessBuilder builder = null;
+        if (SystemUtils.IS_OS_MAC) {
+            builder = new ProcessBuilder("pa11y", website.getAddress());
+        }else if (SystemUtils.IS_OS_WINDOWS){
+            builder = new ProcessBuilder("cmd.exe", "/c",
+                    pa11yPath + subUrl);
+        }
         builder.redirectErrorStream(true);
         Process p;
         try {

@@ -9,4 +9,5 @@ public interface WebsiteService {
     WebsiteResponse save(WebsiteRequest websiteRequest);
     WebsiteResponse findByAddress(String address);
     WebsiteResponse createNewWebsiteFromAddress(String address);
+    WebsiteResponse updateLatestTestDate(String address);
 }

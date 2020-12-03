@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -49,14 +50,32 @@ public class WebsiteServiceImpl implements WebsiteService {
     public WebsiteResponse createNewWebsiteFromAddress(String address){
         Optional<Website> oldWebsite = websiteRepository.findByAddress(address);
         if (oldWebsite.isEmpty()){
-            Optional<WebsiteCategory> general = websiteCategoryRepository.findByName("GENERAL");
             Website website = new Website();
-            website.setAddress(address);
+            Optional<WebsiteCategory> general = websiteCategoryRepository.findByName("GENERAL");
+            if (general.isEmpty()){
+                WebsiteCategory category = new WebsiteCategory();
+                category.setName("GENERAL");
+                category = websiteCategoryRepository.save(category);
+                website.setCategory(category);
+            }
             general.ifPresent(website::setCategory);
+            website.setAddress(address);
             website = websiteRepository.save(website);
             return mapperFacade.map(website,WebsiteResponse.class);
         }else{
             return mapperFacade.map(oldWebsite.get(),WebsiteResponse.class);
         }
+    }
+
+    @Override
+    public WebsiteResponse updateLatestTestDate(String address) {
+        Optional<Website> websiteOptional = websiteRepository.findByAddress(address);
+        if (websiteOptional.isPresent()){
+            Website website = websiteOptional.get();
+            website.setLatestTestDate(LocalDateTime.now());
+            website = websiteRepository.save(website);
+            return mapperFacade.map(website,WebsiteResponse.class);
+        }
+        return null;
     }
 }

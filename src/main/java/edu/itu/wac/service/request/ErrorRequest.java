@@ -2,7 +2,7 @@ package edu.itu.wac.service.request;
 
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Data
 public class ErrorRequest {
@@ -16,6 +16,5 @@ public class ErrorRequest {
     String websiteGroupId;
     WebsiteCategoryRequest category;
     String errorAddress;
-    Timestamp testCrDate;
     Integer subPageErrorCount;
 }

@@ -66,7 +66,7 @@
 								   	  							</tr>
 								   	  							
 								   	  							<tr class="extra"><td colspan="4" ><%=er.getErrorDesc()%></td></tr>
-								   	  							<tr class="extra mb-1"><td colspan="4"><%=er.getErrorArea()%></td></tr>
+								   	  							<tr class="extra mb-1"><td colspan="4"><%=er.getErrorAddress()%></td></tr>
 								   	  							
 								   	  							<%
 								   	  						}
@@ -114,7 +114,7 @@
 								   	  							</tr>
 								   	  							
 								   	  							<tr class="extra"><td colspan="4" ><%=er.getErrorDesc()%></td></tr>
-								   	  							<tr class="extra mb-1"><td colspan="4"><%=er.getErrorArea()%></td></tr>
+								   	  							<tr class="extra mb-1"><td colspan="4"><%=er.getErrorAddress()%></td></tr>
 								   	  							
 								   	  							<%
 								   	  							

@@ -54,6 +54,8 @@ public class Pa11yUtil {
                         counter = 2;
                     } else if (counter == 2) {
                         errorAddress = line.substring(7);
+                        errorAddress = errorAddress.replace("\"", "");
+                        errorAddress = errorAddress.replace("\'", "");
                         counter = 3;
                     } else if (counter == 3) {
                         errorScene = line.substring(7);

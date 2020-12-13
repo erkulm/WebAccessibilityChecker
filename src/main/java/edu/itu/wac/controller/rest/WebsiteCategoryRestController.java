@@ -1,4 +1,4 @@
-package edu.itu.wac.controller;
+package edu.itu.wac.controller.rest;
 
 import edu.itu.wac.service.WebsiteCategoryService;
 import edu.itu.wac.service.response.WebsiteCategoryResponse;

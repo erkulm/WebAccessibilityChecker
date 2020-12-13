@@ -1,18 +1,14 @@
 package edu.itu.wac;
 
-import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.entity.WebsiteCategory;
 import edu.itu.wac.repository.ErrorReportRepository;
 import edu.itu.wac.repository.WebsiteCategoryRepository;
 import edu.itu.wac.repository.WebsiteRepository;
-import edu.itu.wac.util.Pa11yUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class ApplicationStarter {

@@ -1,0 +1,171 @@
+* {
+	margin:0;
+	padding:0;
+	box-sizing: border-box;
+}
+
+.list-inline{
+    vertical-align:auto;
+}
+
+
+#navBar{
+	border-radius:10px;
+}
+
+
+#rowID{
+	height: 100vh;
+}
+
+
+#tool {
+	padding-top:100px;
+}
+
+#webPart{
+	padding: 10px;
+	width: 100%; 
+	max-height: 700px; 
+	overflow-y: scroll; 
+	border: 2px solid black;
+	-webkit-box-shadow: -8px -6px 13px -8px rgba(5,1,5,0.67);
+	-moz-box-shadow: -8px -6px 13px -8px rgba(5,1,5,0.67);
+	box-shadow: -8px -6px 13px -8px rgba(5,1,5,0.67);
+}
+
+
+.yourWebPage {
+	font: 44px;
+	color: #282830;
+}
+
+.titleDiv {
+	width: 100%;
+}
+
+.info {
+	display: flex;
+  	z-index:100000;
+  	left:0px;
+  	top:0px;
+  	justify-content: center;
+  	align-items: center;
+}
+
+.infoPng {
+	font-size: 30px;
+	margin: 10px 10px 10px 0;
+	color: #F76C6C!important;
+	
+}
+
+.infoMsg {
+	position: relative;
+}
+
+.infoMsg .msg{
+	font-size: 22px;
+	color: #F76C6C;
+	margin-bottom: 0px;
+	display: none;
+	z-index: 999;
+}
+
+.info:hover .detail{
+	transform: translate(-110%, -150%);
+	display: initial;
+}
+
+.info:hover .msg {
+	display: initial;
+}
+
+.info:hover + .error {
+	border: 5px dashed #F76C6C;
+}
+
+.info:hover > .error {
+	border: 5px dashed #F76C6C;
+}
+
+.info:hover  .error {
+	border: 5px dashed #F76C6C;
+}
+
+
+.detail{	
+	font-size: 15px;
+	display: none;
+	position: absolute!important;
+	width: max-content;
+	color: black;
+	position: relative;
+	background: #F76C6C;
+	border-radius: .4em;
+	padding: 8px;
+}
+
+.item {
+	position: relative;
+}
+
+.error {
+	position: relative;
+	border: none;
+}
+
+.errorContent {
+	border-top: 2px solid black;
+}
+
+.errorMore {
+	height: max-content;
+}
+
+.errorContent2 {
+	display: none;	
+}
+
+#arrow1{
+	width:100px;height:80px;
+}
+
+#arrow2{
+	width:100px;height:80px;
+}
+
+#buttonId{
+	width:100%;
+}
+
+#tableErrors tr{
+	
+	width:100%;
+}
+
+.categories {
+	max-height: 600px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.extra {
+	display: none;
+}
+
+.extra td {
+	width: 100%;
+    margin: 0;	
+    color: black;
+}
+
+.fa-angle-down {
+	cursor: pointer
+}
+
+.rotate180{
+	transform: rotate(180deg);
+}
+
+

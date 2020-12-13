@@ -1,4 +1,4 @@
-package edu.itu.wac.controller;
+package edu.itu.wac.controller.rest;
 
 import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.Website;
@@ -17,10 +17,7 @@ import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -28,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8080")
 public class ErrorRestController {
     private final WebsiteCategoryService websiteCategoryService;
     private final WebsiteService websiteService;

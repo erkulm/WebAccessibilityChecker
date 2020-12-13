@@ -1,10 +1,7 @@
-package edu.itu.wac.controller;
+package edu.itu.wac.controller.rest;
 
-import edu.itu.wac.entity.Website;
-import edu.itu.wac.entity.WebsiteCategory;
 import edu.itu.wac.service.WebsiteCategoryService;
 import edu.itu.wac.service.WebsiteService;
-import edu.itu.wac.service.response.WebsiteCategoryResponse;
 import edu.itu.wac.service.response.WebsiteResponse;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +15,9 @@ import javax.validation.constraints.NotNull;
 
 @RestController
 public class WebsiteRestController {
-    private static WebsiteCategoryService websiteCategoryService;
-    private static WebsiteService websiteService;
-    private static MapperFacade mapperFacade;
+    private final WebsiteCategoryService websiteCategoryService;
+    private final WebsiteService websiteService;
+    private final MapperFacade mapperFacade;
 
     @Autowired
     public WebsiteRestController(WebsiteCategoryService websiteCategoryService,

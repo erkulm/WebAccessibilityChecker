@@ -1,17 +1,11 @@
 package edu.itu.wac.controller.web;
 
 
-import edu.itu.wac.entity.Error;
-import edu.itu.wac.entity.Website;
-import edu.itu.wac.entity.WebsiteCategory;
+import edu.itu.wac.model.ErrorCategory;
 import edu.itu.wac.service.ErrorService;
 import edu.itu.wac.service.WebsiteService;
-import edu.itu.wac.service.request.ErrorRequest;
 import edu.itu.wac.service.response.ErrorResponse;
-import edu.itu.wac.service.response.WebsiteResponse;
-import edu.itu.wac.util.Pa11yUtil;
 import ma.glasnost.orika.MapperFacade;
-import edu.itu.wac.model.ErrorCategory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -21,10 +15,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -48,30 +43,17 @@ public class DetailController {
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Error in given url!");
         }
 
-        ArrayList<ErrorResponse> errorDefList = new ArrayList<>();
+        List<ErrorResponse> errorDefList;
 
-        WebsiteResponse websiteResponse = websiteService.findByAddress(url);
-        if (websiteResponse == null) {
-            websiteResponse = websiteService.createNewWebsiteFromAddress(url);
-        }
-        List<ErrorResponse> errorResponses;
-        if (websiteResponse.getLatestTestDate() == null
-                || websiteResponse.getLatestTestDate().plusDays(1).isBefore(LocalDateTime.now())) {
-            List<Error> errors = Pa11yUtil.runPa11y(
-                    mapperFacade.map(websiteResponse, Website.class),
-                    "", mapperFacade.map(websiteResponse.getCategory(), WebsiteCategory.class));
+        String uri = "http://localhost:8086/generate-report?address=" + url;
+        RestTemplate restTemplate = new RestTemplate();
+        ErrorResponse[] errorResponseArray = restTemplate.getForObject(uri, ErrorResponse[].class);
+        errorDefList = Arrays.asList(errorResponseArray);
 
-            errorResponses = errorService.saveAll(mapperFacade.mapAsList(errors, ErrorRequest.class));
-            websiteService.updateLatestTestDate(url);
-        } else {
-            errorResponses = errorService.findByWebsiteAddress(url);
-        }
-        errorDefList.addAll(errorResponses);
-        int j = 0;
         List<ErrorCategory> errorCategory = new ArrayList<>();
         for (ErrorResponse errorResponse : errorDefList) {
             String header = errorResponse.getDocument();
@@ -93,7 +75,6 @@ public class DetailController {
                         + "<a class='infoMsg'><span class='msg'>" + "ERROR"
                         + "</span><div class='detail'>" + errorResponse.getErrorDesc() + "</div></a>"
                         + "</div>");
-                j++;
             }
         }
 

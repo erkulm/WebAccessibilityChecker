@@ -13,4 +13,6 @@ public interface ErrorService {
     ErrorResponse save(ErrorRequest errorRequest);
     List<ErrorResponse> findByWebsiteAddress(String address);
     List<ErrorResponse> saveAll(List<ErrorRequest> errorRequests);
+
+    List<ErrorResponse> generateReport(String address);
 }

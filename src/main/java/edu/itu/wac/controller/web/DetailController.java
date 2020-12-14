@@ -52,20 +52,7 @@ public class DetailController {
             System.err.println("Error in given url!");
         }
 
-
-	/*	DBConnection connection = new DBConnection();
-		ErrorReport errorDefinitions = new ErrorReport();
-		errorDefinitions.setConn(connection.conn);
-		Vector<ErrorReport> errorDefList = null;
-		try {
-			errorDefList =  errorDefinitions.fetchWebsiteErrorDefinitons(996);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} */
-
         ArrayList<ErrorResponse> errorDefList = new ArrayList<>();
-
-
 
         WebsiteResponse websiteResponse = websiteService.findByAddress(url);
         if (websiteResponse == null) {
@@ -86,37 +73,31 @@ public class DetailController {
         errorDefList.addAll(errorResponses);
         int j = 0;
         List<ErrorCategory> errorCategory = new ArrayList<>();
-        for(int i = 0; i < errorDefList.size(); i++)
-        {
-            String header = errorDefList.get(i).getDocument();
-            String desc = errorDefList.get(i).getErrorDesc();
-            String id = errorDefList.get(i).getId();
+        for (ErrorResponse errorResponse : errorDefList) {
+            String header = errorResponse.getDocument();
+            String desc = errorResponse.getErrorDesc();
+            String id = errorResponse.getId();
             ErrorCategory errorCat = new ErrorCategory();
             errorCat.setErrorId(id);
             errorCat.setHeader(header);
             errorCat.setErrorDesc(desc);
             errorCategory.add(errorCat);
-            Elements errors = doc.select(errorDefList.get(i).getErrorAddress());
+            Elements errors = doc.select(errorResponse.getErrorAddress());
 
             for (Element error : errors) {
-
-
                 error.parent().addClass("item");
                 error.addClass("error");
-                String errorCode = "error" + (j + 1);
-                error.attr("id",errorCode);
+                error.attr("id", errorResponse.getId());
                 error.parent().prepend("<div class='info'>"
                         + "<i class=\"fas fa-exclamation-triangle infoPng\"></i>"
-                        + "<a class='infoMsg'><span class='msg'>"+ "ERROR"
-                        + "</span><div class='detail'>"+ errorDefList.get(i).getErrorDesc() +"</div></a>"
+                        + "<a class='infoMsg'><span class='msg'>" + "ERROR"
+                        + "</span><div class='detail'>" + errorResponse.getErrorDesc() + "</div></a>"
                         + "</div>");
                 j++;
             }
         }
 
         String pageHtml = doc.outerHtml();
-
-
 
         model.addObject("errorlist", errorDefList);
         model.addObject("errorCategory", errorCategory);

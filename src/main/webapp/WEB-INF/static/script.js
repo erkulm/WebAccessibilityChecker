@@ -7,7 +7,7 @@ $(document).ready(function(){
    		var ids = $(this).attr("name");
    		ids = ids.split("_");
    		var last = ids[ids.length - 1];
-   		var id = "error"+last;
+   		var id = last;
    		   		
    		console.log(id);
 		if ($("#"+id).length) {

@@ -3,36 +3,26 @@ package edu.itu.wac.controller.web;
 
 import edu.itu.wac.model.ErrorCategory;
 import edu.itu.wac.service.ErrorService;
-import edu.itu.wac.service.WebsiteService;
 import edu.itu.wac.service.response.ErrorResponse;
-import ma.glasnost.orika.MapperFacade;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
 public class DetailController {
-    @Autowired
-    WebsiteService websiteService;
+    private final ErrorService errorService;
 
-    @Autowired
-    @Qualifier(value = "websiteServiceMapper")
-    MapperFacade mapperFacade;
-
-    @Autowired
-    ErrorService errorService;
+    public DetailController(ErrorService errorService){
+    this.errorService = errorService;
+    }
 
     @RequestMapping("/detail")
     @ResponseBody
@@ -47,12 +37,7 @@ public class DetailController {
             System.err.println("Error in given url!");
         }
 
-        List<ErrorResponse> errorDefList;
-
-        String uri = "http://localhost:8086/generate-report?address=" + url;
-        RestTemplate restTemplate = new RestTemplate();
-        ErrorResponse[] errorResponseArray = restTemplate.getForObject(uri, ErrorResponse[].class);
-        errorDefList = Arrays.asList(errorResponseArray);
+        List<ErrorResponse> errorDefList = errorService.generateReport(url);
 
         List<ErrorCategory> errorCategory = new ArrayList<>();
         for (ErrorResponse errorResponse : errorDefList) {
@@ -79,11 +64,11 @@ public class DetailController {
         }
 
         String pageHtml = doc.outerHtml();
+        Document docHtml = Jsoup.parse(pageHtml);
 
         model.addObject("errorlist", errorDefList);
         model.addObject("errorCategory", errorCategory);
 
-        Document docHtml = Jsoup.parse(pageHtml);
         model.addObject("html", docHtml);
         model.addObject("pageHtml", pageHtml);
 

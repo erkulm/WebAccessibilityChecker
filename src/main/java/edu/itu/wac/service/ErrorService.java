@@ -15,4 +15,6 @@ public interface ErrorService {
     List<ErrorResponse> saveAll(List<ErrorRequest> errorRequests);
 
     List<ErrorResponse> generateReport(String address);
+
+    List<ErrorResponse> generateDeepReport(String address);
 }

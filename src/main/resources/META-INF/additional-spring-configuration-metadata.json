@@ -9,5 +9,10 @@
       "name": "test.min.day.difference",
       "type": "java.lang.Integer",
       "description": "Description for test.min.day.difference."
+    },
+    {
+      "name": "number.of.threads.pa11y",
+      "type": "java.lang.String",
+      "description": "Description for number.of.threads.pa11y."
     }
   ] }

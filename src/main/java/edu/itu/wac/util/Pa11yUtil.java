@@ -3,6 +3,7 @@ package edu.itu.wac.util;
 import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.entity.WebsiteCategory;
+import edu.itu.wac.etc.LogExecutionTime;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -16,6 +17,7 @@ public class Pa11yUtil {
     @Value("${pa11y.path}")
     private static String pa11yPath;
 
+    @LogExecutionTime
     public static List<Error> runPa11y(Website website, String subUrl, WebsiteCategory category) {
         List<Error> error = new ArrayList<>();
         int lineCounter = 0;

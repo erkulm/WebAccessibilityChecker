@@ -29,4 +29,10 @@ public class ErrorRestController {
     List<ErrorResponse> generateNewReport(@RequestParam @NotNull String address) {
         return errorService.generateReport(address);
     }
+
+    @GetMapping("/generate-deep-report")
+    @ResponseBody
+    List<ErrorResponse> generateDeepReport(@RequestParam @NotNull String address) {
+        return errorService.generateDeepReport(address);
+    }
 }

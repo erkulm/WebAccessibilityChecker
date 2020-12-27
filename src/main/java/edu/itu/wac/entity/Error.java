@@ -18,13 +18,10 @@ public class Error {
     String subPage;
     String errorDesc;
     String errorScene;
-    String errorArea;
     String document;
     String websiteGroupId;
-    @DBRef(lazy = true)
-    WebsiteCategory category;
     String errorAddress;
     @CreatedDate
     LocalDateTime testCrDate;
-    Integer subPageErrorCount;
+    String reportId;
 }

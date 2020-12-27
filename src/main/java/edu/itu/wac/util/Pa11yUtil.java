@@ -4,21 +4,26 @@ import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.entity.WebsiteCategory;
 import edu.itu.wac.etc.LogExecutionTime;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+@Slf4j
 public class Pa11yUtil {
 
     @Value("${pa11y.path}")
     private static String pa11yPath;
 
     @LogExecutionTime
-    public static List<Error> runPa11y(Website website, String subUrl, WebsiteCategory category) {
+    public static List<Error> runPa11y(Website website, String subUrl) {
         List<Error> error = new ArrayList<>();
         int lineCounter = 0;
         int counter = 0;
@@ -28,17 +33,34 @@ public class Pa11yUtil {
         String errorScene;
         String document = null;
         ProcessBuilder builder = null;
+        String reportId = UUID.randomUUID().toString();
+        Process pally = null;
         if (SystemUtils.IS_OS_MAC) {
-            builder = new ProcessBuilder("pa11y", website.getAddress());
-        }else if (SystemUtils.IS_OS_WINDOWS){
+            String[] arguments = new String[]{website.getAddress()};
+            try {
+                pally = Runtime.getRuntime().exec("/usr/local/lib/node_modules/pa11y/bin/pa11y.js " + website.getAddress());
+            } catch (IOException e) {
+                log.error(ExceptionUtils.getStackTrace(e));
+            }
+//            builder = new ProcessBuilder("pa/1y", website.getAddress());
+//            builder = new ProcessBuilder("osascript", "-e",
+//                    "tell application \"Terminal\" to do script \"pa11y "+website.getSubUrl()+"\"");
+        } else if (SystemUtils.IS_OS_WINDOWS) {
             builder = new ProcessBuilder("cmd.exe", "/c",
                     pa11yPath + subUrl);
         }
-        builder.redirectErrorStream(true);
+        if (builder != null)
+            builder.redirectErrorStream(true);
         Process p;
         try {
-            p = builder.start();
-            BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF8"), 8);
+            BufferedReader r;
+            if (SystemUtils.IS_OS_MAC) {
+                r = new BufferedReader(new InputStreamReader(pally.getInputStream(), "UTF8"), 8);
+            } else {
+                p = builder.start();
+
+                r = new BufferedReader(new InputStreamReader(p.getInputStream(), "UTF8"), 8);
+            }
             String line;
             while (true) {
                 line = r.readLine();
@@ -64,7 +86,7 @@ public class Pa11yUtil {
                         counter = 0;
                         error.add(getErrorList(website, subUrl, errorDecs,
                                 errorScene, errorAddress, document,
-                                category));
+                                reportId));
                     }
                 }
             }
@@ -74,7 +96,10 @@ public class Pa11yUtil {
         return error;
     }
 
-    private static Error getErrorList(Website website, String subUrl, String errorDesc, String errorScene, String errorAddress, String document, WebsiteCategory category) {
+    private static Error getErrorList(Website website, String subUrl,
+                                      String errorDesc, String errorScene,
+                                      String errorAddress, String document,
+                                      String reportId) {
         Error error = new Error();
         error.setWebsite(website);
         error.setSubPage(subUrl);
@@ -82,7 +107,7 @@ public class Pa11yUtil {
         error.setErrorScene(errorScene);
         error.setErrorAddress(errorAddress);
         error.setDocument(document);
-        error.setCategory(category);
+        error.setReportId(reportId);
         return error;
     }
 

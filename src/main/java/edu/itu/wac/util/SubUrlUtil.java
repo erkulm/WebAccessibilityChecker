@@ -20,7 +20,7 @@ import java.util.List;
 public class SubUrlUtil {
 
     @LogExecutionTime
-    public static List<String> getSubUrls(Website website, WebsiteCategory category) {
+    public static List<String> getSubUrls(Website website) {
         List<String> subUrlList = new ArrayList<>();
         try {
             String url = website.getAddress();

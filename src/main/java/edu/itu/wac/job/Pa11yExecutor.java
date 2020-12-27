@@ -20,16 +20,14 @@ import java.util.concurrent.FutureTask;
 @Component
 public class Pa11yExecutor {
     private Website website;
-    private WebsiteCategory websiteCategory;
 
     @Value("${number.of.threads.pa11y}")
     Integer numberOfThreads;
 
-    public List<Error> executePally(Website website, WebsiteCategory websiteCategory){
+    public List<Error> executePally(Website website){
         this.website = website;
-        this.websiteCategory = websiteCategory;
 
-        List<String> subUrls = SubUrlUtil.getSubUrls(website, websiteCategory);
+        List<String> subUrls = SubUrlUtil.getSubUrls(website);
 
         ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
 
@@ -37,7 +35,7 @@ public class Pa11yExecutor {
         subUrls.forEach(subUrl->addNewFutureTask(futureTasks,subUrl));
         futureTasks.forEach(executor::execute);
 
-        waitIfNotAllTasksAreDone(futureTasks);
+//        waitIfNotAllTasksAreDone(futureTasks);
 
         List<Error> results = new ArrayList<>();
         futureTasks.forEach(futureTask->getPa11lResult(results, futureTask));
@@ -56,7 +54,7 @@ public class Pa11yExecutor {
     }
 
     private void addNewFutureTask(List<FutureTask<Pa11yResult>> futureTasks, String subUrl) {
-        Pa11yCallable callable = new Pa11yCallable(subUrl, website,websiteCategory);
+        Pa11yCallable callable = new Pa11yCallable(subUrl, website);
         FutureTask<Pa11yResult> futureTask = new FutureTask<>(callable);
         futureTasks.add(futureTask);
     }
@@ -67,7 +65,7 @@ public class Pa11yExecutor {
             done = futureTasks.stream().allMatch(FutureTask::isDone);
             if (!done){
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     log.error(ExceptionUtils.getStackTrace(e));
                 }

@@ -2,7 +2,7 @@ package edu.itu.wac.service.impl;
 
 import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.Website;
-import edu.itu.wac.entity.WebsiteCategory;
+import edu.itu.wac.enums.ErrorExcelHeaders;
 import edu.itu.wac.etc.LogExecutionTime;
 import edu.itu.wac.job.Pa11yExecutor;
 import edu.itu.wac.repository.ErrorReportRepository;
@@ -11,15 +11,23 @@ import edu.itu.wac.service.WebsiteService;
 import edu.itu.wac.service.request.ErrorRequest;
 import edu.itu.wac.service.response.ErrorResponse;
 import edu.itu.wac.service.response.WebsiteResponse;
+import edu.itu.wac.util.ExcelUtil;
 import edu.itu.wac.util.Pa11yUtil;
 import ma.glasnost.orika.MapperFacade;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ErrorServiceImpl implements ErrorService {
@@ -47,6 +55,11 @@ public class ErrorServiceImpl implements ErrorService {
         Error error = mapperFacade.map(errorRequest, Error.class);
         error = errorReportRepository.save(error);
         return mapperFacade.map(error, ErrorResponse.class);
+    }
+
+    @Override
+    public List<ErrorResponse> getAll() {
+        return mapperFacade.mapAsList(errorReportRepository.findAll(), ErrorResponse.class);
     }
 
     @Override
@@ -79,8 +92,7 @@ public class ErrorServiceImpl implements ErrorService {
         if (websiteResponse.getLatestTestDate() == null
                 || websiteResponse.getLatestTestDate().plusDays(testDayDifference).isBefore(LocalDateTime.now())) {
             List<Error> errors = Pa11yUtil.runPa11y(
-                    mapperFacade.map(websiteResponse, Website.class),
-                    "", mapperFacade.map(websiteResponse.getCategory(), WebsiteCategory.class));
+                    mapperFacade.map(websiteResponse, Website.class),"");
 
             errorResponses = saveAll(mapperFacade.mapAsList(errors, ErrorRequest.class));
             websiteService.updateLatestTestDate(address);
@@ -101,8 +113,7 @@ public class ErrorServiceImpl implements ErrorService {
         if (websiteResponse.getLatestTestDate() == null
                 || websiteResponse.getLatestTestDate().plusDays(testDayDifference).isBefore(LocalDateTime.now())) {
             List<Error> errors = pa11yExecutor.executePally(
-                    mapperFacade.map(websiteResponse, Website.class),
-                    mapperFacade.map(websiteResponse.getCategory(), WebsiteCategory.class));
+                    mapperFacade.map(websiteResponse, Website.class));
 
             errorResponses = saveAll(mapperFacade.mapAsList(errors, ErrorRequest.class));
             websiteService.updateLatestTestDate(address);
@@ -111,4 +122,90 @@ public class ErrorServiceImpl implements ErrorService {
         }
         return errorResponses;
     }
+
+    @Override
+    public Workbook generateExcel(List<ErrorResponse> items) {
+        Workbook wb = new HSSFWorkbook();
+        Sheet sheet = wb.createSheet("Special Fare Rates");
+        sheet.setFitToPage(true);
+        sheet.setHorizontallyCenter(true);
+
+        Map<String, CellStyle> styles = ExcelUtil.createExcelStyle(wb);
+
+        for (int i = 0; i < 20; i++) {
+            sheet.setColumnWidth(i, 5000);
+        }
+
+        int rowNum = createHeadersForErrorReport(sheet, styles);
+
+        createCellsForError(sheet, rowNum, styles, items);
+        return wb;
+    }
+
+    private void createCellsForError(Sheet sheet, int rowNum, Map<String, CellStyle> styles,
+                                     List<ErrorResponse> errorList) {
+        CellStyle cellStyle = styles.get("cell");
+        for (ErrorResponse errorResponse : errorList) {
+
+            Row row = sheet.createRow(++rowNum);
+            int inx = 0;
+            DateTimeFormatter sdf = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+
+            Cell website = row.createCell(inx++);
+            website.setCellStyle(cellStyle);
+            website.setCellValue(new HSSFRichTextString(errorResponse.getWebsite().getAddress()));
+
+            Cell subPage = row.createCell(inx++);
+            subPage.setCellStyle(cellStyle);
+            subPage.setCellValue(new HSSFRichTextString(errorResponse.getSubPage()));
+
+            Cell description = row.createCell(inx++);
+            description.setCellStyle(cellStyle);
+            description.setCellValue(new HSSFRichTextString(errorResponse.getErrorDesc()));
+
+            Cell scene = row.createCell(inx++);
+            scene.setCellStyle(cellStyle);
+            scene.setCellValue(new HSSFRichTextString(errorResponse.getErrorScene()));
+
+            Cell address = row.createCell(inx++);
+            address.setCellStyle(cellStyle);
+            address.setCellValue(
+                    new HSSFRichTextString(errorResponse.getErrorAddress()));
+
+            Cell document = row.createCell(inx);
+            document.setCellStyle(cellStyle);
+            document.setCellValue(
+                    new HSSFRichTextString(errorResponse.getDocument() != null ? errorResponse.getDocument() : ""));
+        }
+    }
+
+    private int createHeadersForErrorReport(Sheet sheet, Map<String, CellStyle> styles) {
+        CellStyle headerStyle = styles.get("header");
+        CellStyle titleStyle = styles.get("title");
+        int rowNum = 0;
+        Row titleRow = sheet.createRow(rowNum);
+        titleRow.setHeightInPoints(45);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("ERROR REPORT");
+        titleCell.setCellStyle(titleStyle);
+        // range of style for title, uses excel notation
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$U$1"));
+
+        rowNum++;
+        Row headerRow = sheet.createRow(rowNum);
+        headerRow.setHeightInPoints(40);
+
+        int inx = 0;
+
+        ErrorExcelHeaders[] headerList = ErrorExcelHeaders.values();
+
+        for (ErrorExcelHeaders downloadHeaders : headerList) {
+            Cell cellHeader = headerRow.createCell(inx++);
+            cellHeader.setCellStyle(headerStyle);
+            cellHeader.setCellValue(new HSSFRichTextString(downloadHeaders.toString()));
+        }
+
+        return rowNum;
+    }
+
 }

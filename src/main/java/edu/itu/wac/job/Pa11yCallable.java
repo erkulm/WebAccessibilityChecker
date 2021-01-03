@@ -1,14 +1,12 @@
 package edu.itu.wac.job;
 
-import edu.itu.wac.entity.Error;
+import edu.itu.wac.entity.ErrorReport;
 import edu.itu.wac.entity.Website;
-import edu.itu.wac.entity.WebsiteCategory;
 import edu.itu.wac.util.Pa11yUtil;
 
-import java.util.List;
 import java.util.concurrent.Callable;
 
-public class Pa11yCallable implements Callable<Pa11yResult> {
+public class Pa11yCallable implements Callable<ErrorReport> {
     private final String subUrl;
     private final Website website;
 
@@ -18,10 +16,7 @@ public class Pa11yCallable implements Callable<Pa11yResult> {
     }
 
     @Override
-    public Pa11yResult call() throws Exception {
-        List<Error> errors = Pa11yUtil.runPa11y(website, subUrl);
-        Pa11yResult result = new Pa11yResult();
-        result.setErrors(errors);
-        return result;
+    public ErrorReport call() throws Exception {
+        return Pa11yUtil.runPa11y(website, subUrl);
     }
 }

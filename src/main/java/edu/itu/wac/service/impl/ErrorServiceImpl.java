@@ -1,11 +1,13 @@
 package edu.itu.wac.service.impl;
 
 import edu.itu.wac.entity.Error;
+import edu.itu.wac.entity.ErrorReport;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.enums.ErrorExcelHeaders;
 import edu.itu.wac.etc.LogExecutionTime;
 import edu.itu.wac.job.Pa11yExecutor;
 import edu.itu.wac.repository.ErrorReportRepository;
+import edu.itu.wac.repository.ErrorRepository;
 import edu.itu.wac.service.ErrorService;
 import edu.itu.wac.service.WebsiteService;
 import edu.itu.wac.service.request.ErrorRequest;
@@ -32,6 +34,7 @@ import java.util.Map;
 @Service
 public class ErrorServiceImpl implements ErrorService {
     private final WebsiteService websiteService;
+    private final ErrorRepository errorRepository;
     private final ErrorReportRepository errorReportRepository;
     private final Pa11yExecutor pa11yExecutor;
     private final MapperFacade mapperFacade;
@@ -41,10 +44,12 @@ public class ErrorServiceImpl implements ErrorService {
 
     @Autowired
     public ErrorServiceImpl(WebsiteService websiteService,
+                            ErrorRepository errorRepository,
                             ErrorReportRepository errorReportRepository,
                             Pa11yExecutor pa11yExecutor,
                             @Qualifier(value = "errorServiceMapper") MapperFacade mapperFacade) {
         this.websiteService = websiteService;
+        this.errorRepository = errorRepository;
         this.errorReportRepository = errorReportRepository;
         this.pa11yExecutor = pa11yExecutor;
         this.mapperFacade = mapperFacade;
@@ -53,20 +58,20 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     public ErrorResponse save(ErrorRequest errorRequest) {
         Error error = mapperFacade.map(errorRequest, Error.class);
-        error = errorReportRepository.save(error);
+        error = errorRepository.save(error);
         return mapperFacade.map(error, ErrorResponse.class);
     }
 
     @Override
     public List<ErrorResponse> getAll() {
-        return mapperFacade.mapAsList(errorReportRepository.findAll(), ErrorResponse.class);
+        return mapperFacade.mapAsList(errorRepository.findAll(), ErrorResponse.class);
     }
 
     @Override
     public List<ErrorResponse> findByWebsiteAddress(String address) {
         WebsiteResponse website = websiteService.findByAddress(address);
         if (website != null) {
-            List<Error> errors = errorReportRepository.findAllByWebsite_IdAndTestCrDateIsAfter(
+            List<Error> errors = errorRepository.findAllByWebsite_IdAndTestCrDateIsAfter(
                     website.getId(), LocalDateTime.now().minusDays(testDayDifference));
             return mapperFacade.mapAsList(errors, ErrorResponse.class);
         } else {
@@ -77,7 +82,7 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     public List<ErrorResponse> saveAll(List<ErrorRequest> errorRequests) {
         List<Error> errors = mapperFacade.mapAsList(errorRequests, Error.class);
-        errors = errorReportRepository.saveAll(errors);
+        errors = errorRepository.saveAll(errors);
         return mapperFacade.mapAsList(errors, ErrorResponse.class);
     }
 
@@ -91,10 +96,12 @@ public class ErrorServiceImpl implements ErrorService {
         List<ErrorResponse> errorResponses;
         if (websiteResponse.getLatestTestDate() == null
                 || websiteResponse.getLatestTestDate().plusDays(testDayDifference).isBefore(LocalDateTime.now())) {
-            List<Error> errors = Pa11yUtil.runPa11y(
+            ErrorReport errorReport = Pa11yUtil.runPa11y(
                     mapperFacade.map(websiteResponse, Website.class),"");
 
-            errorResponses = saveAll(mapperFacade.mapAsList(errors, ErrorRequest.class));
+            errorRepository.saveAll(errorReport.getErrors());
+            errorResponses = mapperFacade.mapAsList(errorReport.getErrors(),ErrorResponse.class);
+            errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {
             errorResponses = findByWebsiteAddress(address);
@@ -112,10 +119,11 @@ public class ErrorServiceImpl implements ErrorService {
         List<ErrorResponse> errorResponses;
         if (websiteResponse.getLatestTestDate() == null
                 || websiteResponse.getLatestTestDate().plusDays(testDayDifference).isBefore(LocalDateTime.now())) {
-            List<Error> errors = pa11yExecutor.executePally(
+            ErrorReport errorReport = pa11yExecutor.executePally(
                     mapperFacade.map(websiteResponse, Website.class));
 
-            errorResponses = saveAll(mapperFacade.mapAsList(errors, ErrorRequest.class));
+            errorResponses = saveAll(mapperFacade.mapAsList(errorReport.getErrors(), ErrorRequest.class));
+            errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {
             errorResponses = findByWebsiteAddress(address);

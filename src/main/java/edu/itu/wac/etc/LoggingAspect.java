@@ -19,15 +19,14 @@ public class LoggingAspect {
      * and after the method execution, to and log the execution time of the method
      * This advice will be be applied to all the method which are annotate with the
      * annotation @LogExecutionTime @see com.example.springaop.logging.LogExecutionTime
-     *
+     * <p>
      * Any mehtod where execution times need to be measue and log, anotate the method with @LogExecutionTime
      * example
-     * @LogExecutionTime
-     * public void m1();
      *
      * @param proceedingJoinPoint
      * @return
      * @throws Throwable
+     * @LogExecutionTime public void m1();
      */
     @Around("@annotation(edu.itu.wac.etc.LogExecutionTime)")
     public Object methodTimeLogger(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
@@ -43,9 +42,7 @@ public class LoggingAspect {
         Object result = proceedingJoinPoint.proceed();
         stopWatch.stop();
         // Log method execution time
-        if (logger.isInfoEnabled()) {
-            logger.info(stopWatch.prettyPrint());
-        }
+        logger.info(stopWatch.prettyPrint());
         return result;
     }
 }

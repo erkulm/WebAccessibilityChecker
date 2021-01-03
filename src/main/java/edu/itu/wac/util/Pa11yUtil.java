@@ -1,8 +1,8 @@
 package edu.itu.wac.util;
 
 import edu.itu.wac.entity.Error;
+import edu.itu.wac.entity.ErrorReport;
 import edu.itu.wac.entity.Website;
-import edu.itu.wac.entity.WebsiteCategory;
 import edu.itu.wac.etc.LogExecutionTime;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.SystemUtils;
@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -23,8 +21,8 @@ public class Pa11yUtil {
     private static String pa11yPath;
 
     @LogExecutionTime
-    public static List<Error> runPa11y(Website website, String subUrl) {
-        List<Error> error = new ArrayList<>();
+    public static ErrorReport runPa11y(Website website, String subUrl) {
+        ErrorReport errorReport = new ErrorReport();
         int lineCounter = 0;
         int counter = 0;
         int errorCounter = 0;
@@ -84,22 +82,21 @@ public class Pa11yUtil {
                     } else if (counter == 3) {
                         errorScene = line.substring(7);
                         counter = 0;
-                        error.add(getErrorList(website, subUrl, errorDecs,
-                                errorScene, errorAddress, document,
-                                reportId));
+                        errorReport.getErrors().add(getErrorList(website, subUrl, errorDecs,
+                                errorScene, errorAddress, document));
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return error;
+        errorReport.setWebsite(website);
+        return errorReport;
     }
 
     private static Error getErrorList(Website website, String subUrl,
                                       String errorDesc, String errorScene,
-                                      String errorAddress, String document,
-                                      String reportId) {
+                                      String errorAddress, String document) {
         Error error = new Error();
         error.setWebsite(website);
         error.setSubPage(subUrl);
@@ -107,7 +104,6 @@ public class Pa11yUtil {
         error.setErrorScene(errorScene);
         error.setErrorAddress(errorAddress);
         error.setDocument(document);
-        error.setReportId(reportId);
         return error;
     }
 

@@ -14,9 +14,6 @@ public class ErrorResponse {
     String errorScene;
     String errorArea;
     String document;
-    String websiteGroupId;
-    WebsiteCategoryResponse category;
     String errorAddress;
     LocalDateTime testCrDate;
-    Integer subPageErrorCount;
 }

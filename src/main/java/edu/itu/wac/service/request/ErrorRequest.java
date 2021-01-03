@@ -13,8 +13,5 @@ public class ErrorRequest {
     String errorScene;
     String errorArea;
     String document;
-    String websiteGroupId;
-    WebsiteCategoryRequest category;
     String errorAddress;
-    Integer subPageErrorCount;
 }

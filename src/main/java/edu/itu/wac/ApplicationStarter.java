@@ -2,7 +2,7 @@ package edu.itu.wac;
 
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.entity.WebsiteCategory;
-import edu.itu.wac.repository.ErrorReportRepository;
+import edu.itu.wac.repository.ErrorRepository;
 import edu.itu.wac.repository.WebsiteCategoryRepository;
 import edu.itu.wac.repository.WebsiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Component;
 public class ApplicationStarter {
     private static WebsiteRepository websiteRepository;
     private static WebsiteCategoryRepository websiteCategoryRepository;
-    private static ErrorReportRepository errorReportRepository;
+    private static ErrorRepository errorRepository;
 
     @Autowired
-    public ApplicationStarter(WebsiteRepository websiteRep, WebsiteCategoryRepository websiteCategoryRep, ErrorReportRepository errorReportRep) {
+    public ApplicationStarter(WebsiteRepository websiteRep, WebsiteCategoryRepository websiteCategoryRep, ErrorRepository errorReportRep) {
         websiteRepository = websiteRep;
         websiteCategoryRepository = websiteCategoryRep;
-        errorReportRepository = errorReportRep;
+        errorRepository = errorReportRep;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -28,7 +28,7 @@ public class ApplicationStarter {
 
         websiteRepository.deleteAll();
         websiteCategoryRepository.deleteAll();
-        errorReportRepository.deleteAll();
+        errorRepository.deleteAll();
 //        String kafeinAddress = "https://www.kafein.com/";
 //        Website kafeinWebsite = websiteRepository.findByAddress(kafeinAddress).orElseGet(() -> getNewWebsite(kafeinAddress));
 //        List<Error> error = Pa11yUtil.runPa11y(kafeinWebsite, "", kafeinWebsite.getCategory());

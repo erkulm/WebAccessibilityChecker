@@ -16,4 +16,5 @@ public class ErrorReportResponse {
     WebsiteResponse website;
     List<ErrorResponse> errors = new ArrayList<>();
     LocalDateTime createdDate;
+    Integer numberOfSubPages;
 }

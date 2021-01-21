@@ -91,6 +91,7 @@ public class Pa11yUtil {
             e.printStackTrace();
         }
         errorReport.setWebsite(website);
+        errorReport.setNumberOfSubPages(1);
         return errorReport;
     }
 

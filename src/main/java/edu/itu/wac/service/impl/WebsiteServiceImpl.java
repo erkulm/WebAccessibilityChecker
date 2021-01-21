@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -77,5 +78,10 @@ public class WebsiteServiceImpl implements WebsiteService {
             return mapperFacade.map(website,WebsiteResponse.class);
         }
         return null;
+    }
+
+    @Override
+    public List<WebsiteResponse> getAll() {
+        return mapperFacade.mapAsList(websiteRepository.findAll(),WebsiteResponse.class);
     }
 }

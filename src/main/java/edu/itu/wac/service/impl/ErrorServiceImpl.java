@@ -122,7 +122,9 @@ public class ErrorServiceImpl implements ErrorService {
             ErrorReport errorReport = pa11yExecutor.executePally(
                     mapperFacade.map(websiteResponse, Website.class));
 
-            errorResponses = saveAll(mapperFacade.mapAsList(errorReport.getErrors(), ErrorRequest.class));
+            List<Error> errors = errorRepository.saveAll(errorReport.getErrors());
+            errorReport.setErrors(errors);
+            errorResponses = mapperFacade.mapAsList(errors,ErrorResponse.class);
             errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {

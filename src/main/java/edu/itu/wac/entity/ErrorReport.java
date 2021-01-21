@@ -21,4 +21,5 @@ public class ErrorReport {
     List<Error> errors = new ArrayList<>();
     @CreatedDate
     LocalDateTime createdDate;
+    Integer numberOfSubPages;
 }

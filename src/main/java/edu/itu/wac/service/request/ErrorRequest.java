@@ -3,6 +3,7 @@ package edu.itu.wac.service.request;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class ErrorRequest {
@@ -14,4 +15,5 @@ public class ErrorRequest {
     String errorArea;
     String document;
     String errorAddress;
+    LocalDateTime testCrDate;
 }

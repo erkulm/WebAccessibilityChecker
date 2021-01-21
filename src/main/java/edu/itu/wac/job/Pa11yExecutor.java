@@ -38,6 +38,7 @@ public class Pa11yExecutor {
 
 //        waitIfNotAllTasksAreDone(futureTasks);
         ErrorReport errorReport = new ErrorReport();
+        errorReport.setNumberOfSubPages(subUrls.size());
         futureTasks.forEach(futureTask -> getPa11lResult(errorReport, futureTask));
 
         return errorReport;

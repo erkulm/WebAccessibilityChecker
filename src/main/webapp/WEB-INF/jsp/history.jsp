@@ -21,13 +21,15 @@
             <p class="display-4 maintitle">Web Accessibility Analysis</p>
         </div>
         <div class="row">
-            <div class="ui labeled large icon input w-75">
-                <div class="ui label">https://</div>
-                <input type="text" name="url_input" placeholder="Enter Url...">
-                <button class="ui button historySearchButton primary">
-                    <i class="search icon"></i>
-                </button>
-            </div>
+            <form action="/history">
+                <div class="ui labeled large icon input w-75">
+                    <div class="ui label">https://</div>
+                        <input type="text" name="website" placeholder="Enter Url..." value="${website}">
+                    <button class="ui button historySearchButton primary" type="submit">
+                        <i class="search icon"></i>
+                    </button>
+                </div>
+            </form>
         </div>
         <div class="row sort_row px-5">
             <p class="lead">Test History</p>
@@ -113,7 +115,7 @@
                 <tr>
                     <td class="collapsing">
                         <div class="px-3 row_divs">
-                            ${status.index + 1}
+                                ${status.index + 1}
                         </div>
                     </td>
                     <td>

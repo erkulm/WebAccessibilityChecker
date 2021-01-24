@@ -124,6 +124,7 @@ public class ErrorServiceImpl implements ErrorService {
 
             List<Error> errors = errorRepository.saveAll(errorReport.getErrors());
             errorReport.setErrors(errors);
+            errorReport.setWebsite(mapperFacade.map(websiteResponse,Website.class));
             errorResponses = mapperFacade.mapAsList(errors,ErrorResponse.class);
             errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);

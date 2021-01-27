@@ -45,23 +45,23 @@
                     <div class="scrolling menu">
                         <div class="item">
                             <div class="ui red empty circular label"></div>
-                            <a href="?f=last_week" class="btn">Last 7 Days</a>
+                            <a href="?website=${website}&f=last_week" class="btn">Last 7 Days</a>
                         </div>
                         <div class="item">
                             <div class="ui blue empty circular label"></div>
-                            <a href="?filter=last_month" class="btn">Last Month</a>
+                            <a href="?website=${website}&filter=last_month" class="btn">Last Month</a>
                         </div>
                         <div class="item">
                             <div class="ui black empty circular label"></div>
-                            <a href="?filter=six_months" class="btn">Last 6 Months</a>
+                            <a href="?website=${website}&filter=six_months" class="btn">Last 6 Months</a>
                         </div>
                         <div class="item">
                             <div class="ui purple empty circular label"></div>
-                            <a href="?filter=last_year" class="btn">Last Year</a>
+                            <a href="?website=${website}&filter=last_year" class="btn">Last Year</a>
                         </div>
                         <div class="item">
                             <div class="ui orange empty circular label"></div>
-                            <a href="?filter=two_year" class="btn">Last 2 Year</a>
+                            <a href="?website=${website}&filter=two_year" class="btn">Last 2 Year</a>
                         </div>
                     </div>
                 </div>
@@ -72,16 +72,16 @@
                 <div class="menu">
                     <div class="scrolling menu">
                         <div class="item">
-                            <a href="?sort=error_asc" class="btn">Error Number by Ascending</a>
+                            <a href="?website=${website}&sort=error_asc" class="btn">Error Number by Ascending</a>
                         </div>
                         <div class="item">
-                            <a href="?sort=error_desc" class="btn">Error Number by Descending</a>
+                            <a href="?website=${website}&sort=error_desc" class="btn">Error Number by Descending</a>
                         </div>
                         <div class="item">
-                            <a href="?sort=date_asc" class="btn">Analysis Date by Ascending</a>
+                            <a href="?website=${website}&sort=date_asc" class="btn">Analysis Date by Ascending</a>
                         </div>
                         <div class="item">
-                            <a href="?sort=date_desc" class="btn">Analysis Date by Descending</a>
+                            <a href="?website=${website}&sort=date_desc" class="btn">Analysis Date by Descending</a>
                         </div>
                     </div>
                 </div>

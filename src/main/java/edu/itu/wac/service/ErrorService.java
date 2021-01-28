@@ -18,9 +18,9 @@ public interface ErrorService {
     List<ErrorResponse> findByWebsiteAddress(String address);
     List<ErrorResponse> saveAll(List<ErrorRequest> errorRequests);
 
-    List<ErrorResponse> generateReport(String address);
+    List<ErrorResponse> generateReport(String address, Boolean isHtmlHistoryEnabled);
 
-    List<ErrorResponse> generateDeepReport(String address);
+    List<ErrorResponse> generateDeepReport(String address, Boolean isHtmlHistoryEnabled);
 
     Workbook generateExcel(List<ErrorResponse> items);
 }

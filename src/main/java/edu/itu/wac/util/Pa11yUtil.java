@@ -9,11 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Base64;
 import java.util.UUID;
 
 @Slf4j
@@ -97,6 +100,13 @@ public class Pa11yUtil {
         }
         errorReport.setWebsite(website);
         errorReport.setNumberOfSubPages(1);
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(subUrl).get();
+        } catch (IOException e) {
+            log.error("Website could not be read");
+        }
+        subPageErrors.setPageHtml(doc!=null? Base64.getEncoder().encodeToString(doc.outerHtml().getBytes()):null);
         return errorReport;
     }
 

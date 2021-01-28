@@ -38,7 +38,7 @@ public class DetailController {
             System.err.println("Error in given url!");
         }
 
-        List<ErrorResponse> errorDefList = errorService.generateReport(url);
+        List<ErrorResponse> errorDefList = errorService.generateReport(url,false);
 
         List<ErrorCategory> errorCategory = new ArrayList<>();
         for (ErrorResponse errorResponse : errorDefList) {

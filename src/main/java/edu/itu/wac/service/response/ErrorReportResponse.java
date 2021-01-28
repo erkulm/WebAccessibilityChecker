@@ -1,7 +1,5 @@
 package edu.itu.wac.service.response;
 
-import edu.itu.wac.service.request.ErrorRequest;
-import edu.itu.wac.service.request.WebsiteRequest;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 

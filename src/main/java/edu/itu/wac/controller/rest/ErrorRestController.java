@@ -30,14 +30,14 @@ public class ErrorRestController {
 
     @GetMapping("/generate-report")
     @ResponseBody
-    List<ErrorResponse> generateNewReport(@RequestParam @NotNull String address) {
-        return errorService.generateReport(address);
+    List<ErrorResponse> generateNewReport(@RequestParam @NotNull String address, @RequestParam @NotNull  Boolean isHtmlHistoryEnabled) {
+        return errorService.generateReport(address, isHtmlHistoryEnabled);
     }
 
     @GetMapping("/generate-deep-report")
     @ResponseBody
-    List<ErrorResponse> generateDeepReport(@RequestParam @NotNull String address) {
-        return errorService.generateDeepReport(address);
+    List<ErrorResponse> generateDeepReport(@RequestParam @NotNull String address, @RequestParam @NotNull  Boolean isHtmlHistoryEnabled) {
+        return errorService.generateDeepReport(address, isHtmlHistoryEnabled);
     }
 
     @GetMapping(value = "/errors.xlsx")

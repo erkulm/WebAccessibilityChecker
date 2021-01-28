@@ -93,7 +93,7 @@ public class ErrorServiceImpl implements ErrorService {
 
     @Override
     @LogExecutionTime
-    public List<ErrorResponse> generateReport(String address) {
+    public List<ErrorResponse> generateReport(String address, Boolean isHtmlHistoryEnabled) {
         WebsiteResponse websiteResponse = websiteService.findByAddress(address);
         if (websiteResponse == null) {
             websiteResponse = websiteService.createNewWebsiteFromAddress(address);
@@ -122,7 +122,7 @@ public class ErrorServiceImpl implements ErrorService {
 
     @Override
     @LogExecutionTime
-    public List<ErrorResponse> generateDeepReport(String address) {
+    public List<ErrorResponse> generateDeepReport(String address, Boolean isHtmlHistoryEnabled) {
         WebsiteResponse websiteResponse = websiteService.findByAddress(address);
         if (websiteResponse == null) {
             websiteResponse = websiteService.createNewWebsiteFromAddress(address);

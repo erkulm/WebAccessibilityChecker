@@ -33,7 +33,7 @@ public class IFrameRestController {
         } catch (IOException e) {
             return "Website could not be read";
         }
-        List<ErrorResponse> errorDefList = errorService.generateReport(address);
+        List<ErrorResponse> errorDefList = errorService.generateReport(address, false);
 
         List<ErrorCategory> errorCategory = new ArrayList<>();
         for (ErrorResponse errorResponse : errorDefList) {

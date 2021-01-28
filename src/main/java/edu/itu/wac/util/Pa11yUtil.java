@@ -102,7 +102,7 @@ public class Pa11yUtil {
         errorReport.setNumberOfSubPages(1);
         Document doc = null;
         try {
-            doc = Jsoup.connect(subUrl).get();
+            doc = Jsoup.connect(!StringUtils.isEmpty(subUrl)?subUrl: website.getAddress()).get();
         } catch (IOException e) {
             log.error("Website could not be read");
         }

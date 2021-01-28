@@ -101,6 +101,7 @@ public class ErrorServiceImpl implements ErrorService {
         List<ErrorResponse> errorResponses;
         if (websiteResponse.getLatestTestDate() == null
                 || websiteResponse.getLatestTestDate().plusDays(testDayDifference).isBefore(LocalDateTime.now())) {
+            long startTime = System.currentTimeMillis();
             ErrorReport errorReport = Pa11yUtil.runPa11y(
                     mapperFacade.map(websiteResponse, Website.class), "");
 
@@ -112,6 +113,7 @@ public class ErrorServiceImpl implements ErrorService {
             subPageErrorsRepository.saveAll(errorReport.getSubPageErrors());
             errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
             errorReport.setTotalErrors(errors.size());
+            errorReport.setReportGenerationTime(System.currentTimeMillis()-startTime);
             errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {
@@ -130,6 +132,7 @@ public class ErrorServiceImpl implements ErrorService {
         List<ErrorResponse> errorResponses;
         if (websiteResponse.getLatestTestDate() == null
                 || websiteResponse.getLatestTestDate().plusDays(testDayDifference).isBefore(LocalDateTime.now())) {
+            long startTime = System.currentTimeMillis();
             ErrorReport errorReport = pa11yExecutor.executePally(
                     mapperFacade.map(websiteResponse, Website.class));
 
@@ -142,6 +145,7 @@ public class ErrorServiceImpl implements ErrorService {
             errorReport.setWebsite(mapperFacade.map(websiteResponse, Website.class));
             errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
             errorReport.setTotalErrors(errors.size());
+            errorReport.setReportGenerationTime(System.currentTimeMillis()-startTime);
             errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {

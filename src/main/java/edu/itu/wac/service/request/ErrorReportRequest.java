@@ -13,4 +13,5 @@ public class ErrorReportRequest {
     WebsiteRequest website;
     List<SubPageErrorsRequest> subPageErrors = new ArrayList<>();
     Integer totalErrors;
+    Long reportGenerationTime;
 }

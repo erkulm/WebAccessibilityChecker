@@ -16,5 +16,5 @@ public class ErrorReportResponse {
     LocalDateTime createdDate;
     Integer numberOfSubPages;
     Integer totalErrors;
-
+    Long reportGenerationTime;
 }

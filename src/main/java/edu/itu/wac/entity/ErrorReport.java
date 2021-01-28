@@ -23,4 +23,5 @@ public class ErrorReport {
     LocalDateTime createdDate;
     Integer numberOfSubPages;
     Integer totalErrors;
+    Long reportGenerationTime;
 }

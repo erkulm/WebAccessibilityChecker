@@ -22,4 +22,5 @@ public class ErrorReport {
     @CreatedDate
     LocalDateTime createdDate;
     Integer numberOfSubPages;
+    Integer totalErrors;
 }

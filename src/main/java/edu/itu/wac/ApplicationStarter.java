@@ -1,8 +1,10 @@
 package edu.itu.wac;
 
+import edu.itu.wac.entity.SubPageErrors;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.entity.WebsiteCategory;
 import edu.itu.wac.repository.ErrorRepository;
+import edu.itu.wac.repository.SubPageErrorsRepository;
 import edu.itu.wac.repository.WebsiteCategoryRepository;
 import edu.itu.wac.repository.WebsiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,23 +14,26 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ApplicationStarter {
-    private static WebsiteRepository websiteRepository;
-    private static WebsiteCategoryRepository websiteCategoryRepository;
-    private static ErrorRepository errorRepository;
+    private final WebsiteRepository websiteRepository;
+    private final WebsiteCategoryRepository websiteCategoryRepository;
+    private final ErrorRepository errorRepository;
+    private final SubPageErrorsRepository subPageErrorsRepository;
 
     @Autowired
-    public ApplicationStarter(WebsiteRepository websiteRep, WebsiteCategoryRepository websiteCategoryRep, ErrorRepository errorReportRep) {
-        websiteRepository = websiteRep;
-        websiteCategoryRepository = websiteCategoryRep;
-        errorRepository = errorReportRep;
+    public ApplicationStarter(WebsiteRepository websiteRep, WebsiteCategoryRepository websiteCategoryRep, ErrorRepository errorReportRep,SubPageErrorsRepository subPageErrorsRepository) {
+        this.websiteRepository = websiteRep;
+        this.websiteCategoryRepository = websiteCategoryRep;
+        this.errorRepository = errorReportRep;
+        this.subPageErrorsRepository = subPageErrorsRepository;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
 
-//        websiteRepository.deleteAll();
-//        websiteCategoryRepository.deleteAll();
-//        errorRepository.deleteAll();
+        websiteRepository.deleteAll();
+        websiteCategoryRepository.deleteAll();
+        errorRepository.deleteAll();
+        subPageErrorsRepository.deleteAll();
 //        String kafeinAddress = "https://www.kafein.com/";
 //        Website kafeinWebsite = websiteRepository.findByAddress(kafeinAddress).orElseGet(() -> getNewWebsite(kafeinAddress));
 //        List<Error> error = Pa11yUtil.runPa11y(kafeinWebsite, "", kafeinWebsite.getCategory());

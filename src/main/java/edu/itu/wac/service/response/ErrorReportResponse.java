@@ -17,4 +17,6 @@ public class ErrorReportResponse {
     List<SubPageErrorsResponse> subPageErrors = new ArrayList<>();
     LocalDateTime createdDate;
     Integer numberOfSubPages;
+    Integer totalErrors;
+
 }

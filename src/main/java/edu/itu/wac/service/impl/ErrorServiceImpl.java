@@ -111,6 +111,7 @@ public class ErrorServiceImpl implements ErrorService {
             errorRepository.saveAll(errors);
             subPageErrorsRepository.saveAll(errorReport.getSubPageErrors());
             errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
+            errorReport.setTotalErrors(errors.size());
             errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {
@@ -140,6 +141,7 @@ public class ErrorServiceImpl implements ErrorService {
             subPageErrorsRepository.saveAll(errorReport.getSubPageErrors());
             errorReport.setWebsite(mapperFacade.map(websiteResponse, Website.class));
             errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
+            errorReport.setTotalErrors(errors.size());
             errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {

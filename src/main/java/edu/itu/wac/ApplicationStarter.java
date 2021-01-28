@@ -30,10 +30,10 @@ public class ApplicationStarter {
     @EventListener(ApplicationReadyEvent.class)
     public void doSomethingAfterStartup() {
 
-        websiteRepository.deleteAll();
-        websiteCategoryRepository.deleteAll();
-        errorRepository.deleteAll();
-        subPageErrorsRepository.deleteAll();
+//        websiteRepository.deleteAll();
+//        websiteCategoryRepository.deleteAll();
+//        errorRepository.deleteAll();
+//        subPageErrorsRepository.deleteAll();
 //        String kafeinAddress = "https://www.kafein.com/";
 //        Website kafeinWebsite = websiteRepository.findByAddress(kafeinAddress).orElseGet(() -> getNewWebsite(kafeinAddress));
 //        List<Error> error = Pa11yUtil.runPa11y(kafeinWebsite, "", kafeinWebsite.getCategory());

@@ -11,4 +11,6 @@ public interface ErrorReportService {
     List<ErrorReportResponse> getAll();
 
     List<ErrorReportResponse> findByWebsiteAddress(String address);
+
+    ErrorReportResponse findById(String id);
 }

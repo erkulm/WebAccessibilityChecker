@@ -57,4 +57,9 @@ public class ErrorReportServiceImpl implements ErrorReportService {
             return null;
         }
     }
+
+    @Override
+    public ErrorReportResponse findById(String id) {
+        return mapperFacade.map(errorReportRepository.findById(id).orElse(null),ErrorReportResponse.class);
+    }
 }

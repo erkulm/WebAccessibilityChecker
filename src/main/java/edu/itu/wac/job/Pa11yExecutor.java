@@ -34,7 +34,7 @@ public class Pa11yExecutor {
         subUrls.forEach(subUrl -> addNewFutureTask(futureTasks, subUrl));
         futureTasks.forEach(executor::execute);
 
-//        waitIfNotAllTasksAreDone(futureTasks);
+        waitIfNotAllTasksAreDone(futureTasks);
         ErrorReport errorReport = new ErrorReport();
         errorReport.setNumberOfSubPages(subUrls.size());
         futureTasks.forEach(futureTask -> getPa11lResult(errorReport, futureTask));
@@ -58,13 +58,13 @@ public class Pa11yExecutor {
         futureTasks.add(futureTask);
     }
 
-    private void waitIfNotAllTasksAreDone(List<FutureTask<Pa11yResult>> futureTasks) {
+    private void waitIfNotAllTasksAreDone(List<FutureTask<ErrorReport>> futureTasks) {
         boolean done = false;
         while (!done) {
             done = futureTasks.stream().allMatch(FutureTask::isDone);
             if (!done) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     log.error(ExceptionUtils.getStackTrace(e));
                 }

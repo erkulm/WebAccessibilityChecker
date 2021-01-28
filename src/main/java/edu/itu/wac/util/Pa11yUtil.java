@@ -104,7 +104,7 @@ public class Pa11yUtil {
         try {
             doc = Jsoup.connect(!StringUtils.isEmpty(subUrl)?subUrl: website.getAddress()).get();
         } catch (IOException e) {
-            log.error("Website could not be read");
+            log.error("Website could not be read" + subUrl);
         }
         subPageErrors.setPageHtml(doc!=null? Base64.getEncoder().encodeToString(doc.outerHtml().getBytes()):null);
         return errorReport;

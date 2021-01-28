@@ -14,7 +14,7 @@ import java.util.List;
 public class ErrorReportResponse {
     String id;
     WebsiteResponse website;
-    List<ErrorResponse> errors = new ArrayList<>();
+    List<SubPageErrorsResponse> subPageErrors = new ArrayList<>();
     LocalDateTime createdDate;
     Integer numberOfSubPages;
 }

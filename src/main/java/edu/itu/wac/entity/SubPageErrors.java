@@ -1,7 +1,6 @@
 package edu.itu.wac.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,14 +11,10 @@ import java.util.List;
 
 @Document
 @Data
-public class ErrorReport {
+public class SubPageErrors {
     @Id
     String id;
+    String subPage;
     @DBRef(lazy = true)
-    Website website;
-    @DBRef(lazy = true)
-    List<SubPageErrors> subPageErrors = new ArrayList<>();
-    @CreatedDate
-    LocalDateTime createdDate;
-    Integer numberOfSubPages;
+    List<Error> errors = new ArrayList<>();
 }

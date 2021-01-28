@@ -1,9 +1,7 @@
 package edu.itu.wac.job;
 
-import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.ErrorReport;
 import edu.itu.wac.entity.Website;
-import edu.itu.wac.entity.WebsiteCategory;
 import edu.itu.wac.util.SubUrlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -51,7 +49,7 @@ public class Pa11yExecutor {
         } catch (InterruptedException | ExecutionException e) {
             log.error(ExceptionUtils.getStackTrace(e));
         }
-        errorReport.getErrors().addAll(partOfErrorReport.getErrors());
+        errorReport.getSubPageErrors().addAll(partOfErrorReport.getSubPageErrors());
     }
 
     private void addNewFutureTask(List<FutureTask<ErrorReport>> futureTasks, String subUrl) {

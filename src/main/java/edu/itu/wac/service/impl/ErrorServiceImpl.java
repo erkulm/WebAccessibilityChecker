@@ -8,6 +8,7 @@ import edu.itu.wac.etc.LogExecutionTime;
 import edu.itu.wac.job.Pa11yExecutor;
 import edu.itu.wac.repository.ErrorReportRepository;
 import edu.itu.wac.repository.ErrorRepository;
+import edu.itu.wac.repository.SubPageErrorsRepository;
 import edu.itu.wac.service.ErrorService;
 import edu.itu.wac.service.WebsiteService;
 import edu.itu.wac.service.request.ErrorRequest;
@@ -30,12 +31,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ErrorServiceImpl implements ErrorService {
     private final WebsiteService websiteService;
     private final ErrorRepository errorRepository;
     private final ErrorReportRepository errorReportRepository;
+    private final SubPageErrorsRepository subPageErrorsRepository;
     private final Pa11yExecutor pa11yExecutor;
     private final MapperFacade mapperFacade;
 
@@ -46,11 +49,13 @@ public class ErrorServiceImpl implements ErrorService {
     public ErrorServiceImpl(WebsiteService websiteService,
                             ErrorRepository errorRepository,
                             ErrorReportRepository errorReportRepository,
+                            SubPageErrorsRepository subPageErrorsRepository,
                             Pa11yExecutor pa11yExecutor,
                             @Qualifier(value = "errorServiceMapper") MapperFacade mapperFacade) {
         this.websiteService = websiteService;
         this.errorRepository = errorRepository;
         this.errorReportRepository = errorReportRepository;
+        this.subPageErrorsRepository = subPageErrorsRepository;
         this.pa11yExecutor = pa11yExecutor;
         this.mapperFacade = mapperFacade;
     }
@@ -97,10 +102,15 @@ public class ErrorServiceImpl implements ErrorService {
         if (websiteResponse.getLatestTestDate() == null
                 || websiteResponse.getLatestTestDate().plusDays(testDayDifference).isBefore(LocalDateTime.now())) {
             ErrorReport errorReport = Pa11yUtil.runPa11y(
-                    mapperFacade.map(websiteResponse, Website.class),"");
+                    mapperFacade.map(websiteResponse, Website.class), "");
 
-            errorRepository.saveAll(errorReport.getErrors());
-            errorResponses = mapperFacade.mapAsList(errorReport.getErrors(),ErrorResponse.class);
+            List<Error> errors = errorReport.getSubPageErrors()
+                    .stream()
+                    .flatMap(spe -> spe.getErrors().stream())
+                    .collect(Collectors.toList());
+            errorRepository.saveAll(errors);
+            subPageErrorsRepository.saveAll(errorReport.getSubPageErrors());
+            errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
             errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {
@@ -122,10 +132,14 @@ public class ErrorServiceImpl implements ErrorService {
             ErrorReport errorReport = pa11yExecutor.executePally(
                     mapperFacade.map(websiteResponse, Website.class));
 
-            List<Error> errors = errorRepository.saveAll(errorReport.getErrors());
-            errorReport.setErrors(errors);
-            errorReport.setWebsite(mapperFacade.map(websiteResponse,Website.class));
-            errorResponses = mapperFacade.mapAsList(errors,ErrorResponse.class);
+            List<Error> errors = errorReport.getSubPageErrors()
+                    .stream()
+                    .flatMap(spe -> spe.getErrors().stream())
+                    .collect(Collectors.toList());
+            errorRepository.saveAll(errors);
+            subPageErrorsRepository.saveAll(errorReport.getSubPageErrors());
+            errorReport.setWebsite(mapperFacade.map(websiteResponse, Website.class));
+            errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
             errorReportRepository.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {

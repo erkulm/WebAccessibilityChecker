@@ -130,7 +130,7 @@
                     <td>
                         <div class="px-4 row_divs">
                             <button class="ui inverted red button">See All Errors</button>
-                            <p>${errorReport.errors.size()}</p>
+                            <p>${errorReport.subPageErrorsResponses.size()}</p>
                         </div>
                     </td>
                     <td>

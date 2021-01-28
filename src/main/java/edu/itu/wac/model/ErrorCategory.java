@@ -199,7 +199,7 @@ public class ErrorCategory {
 		String num = header.substring(32, 37).replace("_", ".");
 		int i;
 		if (num.equals("1.3.1")) {
-			String ext = header.substring(42);
+			String ext = header.length()>=43 ?header.substring(42): header;
 			num = num + ext;
 		}
 		String newHeader = "No Topic Found";

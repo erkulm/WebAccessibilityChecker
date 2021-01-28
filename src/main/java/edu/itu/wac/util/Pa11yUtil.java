@@ -2,9 +2,11 @@ package edu.itu.wac.util;
 
 import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.ErrorReport;
+import edu.itu.wac.entity.SubPageErrors;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.etc.LogExecutionTime;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,9 @@ public class Pa11yUtil {
     @LogExecutionTime
     public static ErrorReport runPa11y(Website website, String subUrl) {
         ErrorReport errorReport = new ErrorReport();
+        SubPageErrors subPageErrors = new SubPageErrors();
+        subPageErrors.setSubPage(!StringUtils.isEmpty(subUrl) ? subUrl : website.getAddress());
+        errorReport.getSubPageErrors().add(subPageErrors);
         int lineCounter = 0;
         int counter = 0;
         int errorCounter = 0;
@@ -82,7 +87,7 @@ public class Pa11yUtil {
                     } else if (counter == 3) {
                         errorScene = line.substring(7);
                         counter = 0;
-                        errorReport.getErrors().add(getErrorList(website, subUrl, errorDecs,
+                        subPageErrors.getErrors().add(getErrorList(website, subUrl, errorDecs,
                                 errorScene, errorAddress, document));
                     }
                 }

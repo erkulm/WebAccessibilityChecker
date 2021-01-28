@@ -10,7 +10,7 @@
 <body>
 
 	<div class="container mt-5 pb-5">
-		<form method="post" action="urlCheck">
+		<form method="post" action="/detail">
 			<h1 class="display-3 text-center mb-5">Welcome</h1>
 		    <div class="input-group urlInput">
 		        <input type="text" class="form-control" name="url">

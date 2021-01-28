@@ -9,7 +9,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -24,12 +26,11 @@ public class DetailController {
     this.errorService = errorService;
     }
 
-    @RequestMapping("/detail")
+    @PostMapping("/detail")
     @ResponseBody
-    public ModelAndView serveDetailPage() {
+    public ModelAndView serveDetailPage(@RequestParam(required = false) String url) {
         ModelAndView model = new ModelAndView();
         model.setViewName("detail");
-        String url = "https://en.wikipedia.org/wiki/OpenCV";
         Document doc = null;
         try {
             doc = Jsoup.connect(url).get();

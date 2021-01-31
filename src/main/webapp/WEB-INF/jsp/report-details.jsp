@@ -100,7 +100,7 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="subPageErrors" items="${errorReport.subPageErrors}" varStatus="status">
+            <c:forEach var="error" items="${errorReport.subPageErrors}" varStatus="status">
                 <tr>
                     <td class="collapsing">
                         <div class="px-3 row_divs">
@@ -109,7 +109,7 @@
                     </td>
                     <td>
                         <div class="px-4 row_divs">
-                            <p>${subPageErrors.subPage}</p>
+                            <p>${error.subPage}</p>
                             <div class="badge badge-primary history_badge px-2 py-1">
                                 <p class="history_date">${errorReport.createdDate}</p>
                             </div>
@@ -117,12 +117,13 @@
                     </td>
                     <td>
                         <div class="px-4 row_divs">
-                            <p>${subPageErrors.errors!= null ? subPageErrors.errors.size():0}</p>
+                            <p>${error.errors!= null ? error.errors.size():0}</p>
+                            <a href="/error-details?id=${error.id}">Details</a>
                         </div>
                     </td>
                     <td>
                         <div class="px-4 row_divs">
-                            <a href="/detail-history?subPageErrorsId=${subPageErrors.id}">Details</a>
+                            <a href="/detail-history?subPageErrorsId=${error.id}">Details</a>
                         </div>
                     </td>
                 </tr>

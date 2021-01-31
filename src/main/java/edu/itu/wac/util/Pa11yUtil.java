@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Slf4j
@@ -24,6 +24,9 @@ public class Pa11yUtil {
 
     @Value("${pa11y.path}")
     private static String pa11yPath;
+
+    @Value("${file.storage.path:/usr/mahmut/Downloads/data/}")
+    private static String fileStoragePath;
 
     @LogExecutionTime
     public static ErrorReport runPa11y(Website website, String subUrl) {
@@ -39,7 +42,6 @@ public class Pa11yUtil {
         String errorScene;
         String document = null;
         ProcessBuilder builder = null;
-        String reportId = UUID.randomUUID().toString();
         Process pally = null;
         if (SystemUtils.IS_OS_MAC) {
             String[] arguments = new String[]{website.getAddress()};
@@ -106,7 +108,21 @@ public class Pa11yUtil {
         } catch (IOException e) {
             log.error("Website could not be read" + subUrl);
         }
-        subPageErrors.setPageHtml(doc!=null? Base64.getEncoder().encodeToString(doc.outerHtml().getBytes()):null);
+
+        String fileUUID = UUID.randomUUID().toString();
+        subPageErrors.setHtmlPath(
+                "/Users/mahmut/Downloads/data/" +
+                        fileUUID +
+                        ".zip");
+        if (doc!=null) {
+            ZipUtil.zip(doc.outerHtml().getBytes(StandardCharsets.UTF_8),"/Users/mahmut/Downloads/data/",fileUUID);
+
+//            try (FileOutputStream writer = new FileOutputStream(new File(subPageErrors.getHtmlPath()))) {
+//                writer.write(doc.outerHtml().getBytes());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
         return errorReport;
     }
 

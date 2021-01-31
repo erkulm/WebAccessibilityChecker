@@ -14,5 +14,10 @@
       "name": "number.of.threads.pa11y",
       "type": "java.lang.String",
       "description": "Description for number.of.threads.pa11y."
+    },
+    {
+      "name": "file.storage.path",
+      "type": "java.lang.String",
+      "description": "Description for file.storage.path."
     }
   ] }

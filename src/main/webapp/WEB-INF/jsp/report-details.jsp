@@ -122,7 +122,7 @@
                     </td>
                     <td>
                         <div class="px-4 row_divs">
-                            <a href="/detail-history?subPageErrorsId=${subPageErrors.id}">Detail History</a>
+                            <a href="/detail-history?subPageErrorsId=${subPageErrors.id}">Details</a>
                         </div>
                     </td>
                 </tr>

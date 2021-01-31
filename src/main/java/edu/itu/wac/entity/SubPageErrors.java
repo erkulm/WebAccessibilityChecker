@@ -15,7 +15,7 @@ public class SubPageErrors {
     @Id
     String id;
     String subPage;
-    String pageHtml;
+    String htmlPath;
     @DBRef(lazy = true)
     List<Error> errors = new ArrayList<>();
 }

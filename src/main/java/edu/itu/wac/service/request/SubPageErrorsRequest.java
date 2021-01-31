@@ -11,6 +11,6 @@ import java.util.List;
 public class SubPageErrorsRequest {
     String id;
     String subPage;
-    String pageHtml;
+    String htmlPath;
     List<ErrorRequest> errors = new ArrayList<>();
 }

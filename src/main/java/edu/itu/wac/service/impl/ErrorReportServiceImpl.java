@@ -1,11 +1,13 @@
 package edu.itu.wac.service.impl;
 
+import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.ErrorReport;
 import edu.itu.wac.job.Pa11yExecutor;
 import edu.itu.wac.repository.ErrorReportRepository;
 import edu.itu.wac.repository.ErrorRepository;
 import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.service.WebsiteService;
+import edu.itu.wac.service.response.ErrorCountInfo;
 import edu.itu.wac.service.response.ErrorReportResponse;
 import edu.itu.wac.service.response.WebsiteResponse;
 import ma.glasnost.orika.MapperFacade;
@@ -14,7 +16,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ErrorReportServiceImpl implements ErrorReportService {
@@ -60,6 +63,53 @@ public class ErrorReportServiceImpl implements ErrorReportService {
 
     @Override
     public ErrorReportResponse findById(String id) {
-        return mapperFacade.map(errorReportRepository.findById(id).orElse(null),ErrorReportResponse.class);
+        return mapperFacade.map(errorReportRepository.findById(id).orElse(null), ErrorReportResponse.class);
+    }
+
+    @Override
+    public List<ErrorCountInfo> getErrorCountInfo(String id) {
+        List<ErrorCountInfo> errorCountInfoList = new ArrayList<>();
+        Optional<ErrorReport> errorReportOptional = errorReportRepository.findById(id);
+        if (errorReportOptional.isPresent()) {
+            ErrorReport errorReport = errorReportOptional.get();
+            List<Error> errors = errorReport.getSubPageErrors()
+                    .stream()
+                    .flatMap(spe -> spe.getErrors().stream())
+                    .collect(Collectors.toList());
+            Map<String, List<Error>> groupedErrors
+                    = errors.stream().collect(Collectors.groupingBy(Error::getErrorDesc));
+            for (int i = 0; i < 10; i++) {
+                ErrorCountInfo errorCountInfo = getErrorCountInfo(groupedErrors);
+                if (errorCountInfo != null) {
+                    errorCountInfoList.add(errorCountInfo);
+                }
+            }
+            errorCountInfoList.sort(Comparator.comparing(ErrorCountInfo::getErrorCount).reversed());
+            return errorCountInfoList;
+        }
+        return null;
+    }
+
+    private ErrorCountInfo getErrorCountInfo(Map<String, List<Error>> groupedErrors) {
+        if (!groupedErrors.isEmpty()) {
+            ErrorCountInfo errorCountInfo = new ErrorCountInfo();
+            int temp = 0;
+            Map.Entry<String, List<Error>> pairWithMostOccurrences = null;
+            Iterator<Map.Entry<String, List<Error>>> iterator = groupedErrors.entrySet().iterator();
+            for (Map.Entry<String, List<Error>> pair : groupedErrors.entrySet()) {
+                if (pair.getValue().size() > temp) {
+                    temp = pair.getValue().size();
+                    pairWithMostOccurrences = pair;
+                }
+            }
+            if (pairWithMostOccurrences != null) {
+                errorCountInfo.setDocument(pairWithMostOccurrences.getValue().get(0).getDocument());
+                errorCountInfo.setErrorCount(temp);
+                errorCountInfo.setErrorDesc(pairWithMostOccurrences.getKey());
+                groupedErrors.remove(pairWithMostOccurrences.getKey());
+                return errorCountInfo;
+            }
+        }
+        return null;
     }
 }

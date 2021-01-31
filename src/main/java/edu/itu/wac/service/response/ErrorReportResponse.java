@@ -1,13 +1,11 @@
 package edu.itu.wac.service.response;
 
 import lombok.Data;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Document
 @Data
 public class ErrorReportResponse {
     String id;

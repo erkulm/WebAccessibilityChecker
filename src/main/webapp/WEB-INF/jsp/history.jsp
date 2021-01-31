@@ -120,7 +120,7 @@
                     </td>
                     <td>
                         <div class="px-4 row_divs">
-                            <button class="ui inverted red button">Error Analysis Panel</button>
+                            <a href="/error-analysis?id=${errorReport.id}" class="ui inverted red button">Error Analysis Panel</a>
                             <p>${errorReport.website.address}</p>
                             <div class="badge badge-primary history_badge px-2 py-1">
                                 <p class="history_date">${errorReport.createdDate}</p>

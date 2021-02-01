@@ -55,7 +55,7 @@ public class Pa11yUtil {
 //                    "tell application \"Terminal\" to do script \"pa11y "+website.getSubUrl()+"\"");
         } else if (SystemUtils.IS_OS_WINDOWS) {
             builder = new ProcessBuilder("cmd.exe", "/c",
-                    pa11yPath + subUrl);
+                    "pa11y " + (!StringUtils.isEmpty(subUrl)?subUrl: website.getAddress()));
         }
         if (builder != null)
             builder.redirectErrorStream(true);
@@ -115,7 +115,7 @@ public class Pa11yUtil {
                         fileUUID +
                         ".zip");
         if (doc!=null) {
-            ZipUtil.zip(doc.outerHtml().getBytes(StandardCharsets.UTF_8),"/Users/mahmut/Downloads/data/",fileUUID);
+            ZipUtil.zip(doc.outerHtml().getBytes(StandardCharsets.UTF_8),"C:\\Users\\Kafein\\Downloads\\data\\",fileUUID);
 
 //            try (FileOutputStream writer = new FileOutputStream(new File(subPageErrors.getHtmlPath()))) {
 //                writer.write(doc.outerHtml().getBytes());

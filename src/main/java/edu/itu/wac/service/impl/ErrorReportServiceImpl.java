@@ -7,6 +7,8 @@ import edu.itu.wac.repository.ErrorReportRepository;
 import edu.itu.wac.repository.ErrorRepository;
 import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.service.WebsiteService;
+import edu.itu.wac.service.request.ComparisonRequest;
+import edu.itu.wac.service.response.ComparisonResult;
 import edu.itu.wac.service.response.ErrorCountInfo;
 import edu.itu.wac.service.response.ErrorReportResponse;
 import edu.itu.wac.service.response.WebsiteResponse;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ErrorReportServiceImpl implements ErrorReportService {
@@ -88,6 +91,41 @@ public class ErrorReportServiceImpl implements ErrorReportService {
             return errorCountInfoList;
         }
         return null;
+    }
+
+    @Override
+    public List<ComparisonResult> getComparisonData(ComparisonRequest comparisonRequest) {
+        Iterable<ErrorReport> errorReportsIterable = errorReportRepository.findAllById(comparisonRequest.getReportIds());
+        List<ErrorReport> errorReports = StreamSupport.stream(errorReportsIterable.spliterator(), false)
+                .collect(Collectors.toList());
+        List<ComparisonResult> comparisonResultList = new ArrayList<>();
+        for (ErrorReport errorReport : errorReports) {
+            List<Error> errors = errorReport.getSubPageErrors()
+                    .stream()
+                    .flatMap(spe -> spe.getErrors().stream())
+                    .collect(Collectors.toList());
+            Map<String, Long> comparisonData = errors.stream()
+                    .collect(Collectors.groupingBy(Error::getDocument, Collectors.counting()));
+            ComparisonResult result = new ComparisonResult();
+            result.setData(comparisonData);
+            result.setAddress(errorReport.getWebsite().getAddress());
+            comparisonResultList.add(result);
+        }
+        if (!comparisonResultList.isEmpty()) {
+            comparisonResultList.forEach(c -> addZeroErrors(c, comparisonResultList));
+        }
+        return comparisonResultList;
+    }
+
+    private void addZeroErrors(ComparisonResult c, List<ComparisonResult> comparisonResultList) {
+        c.getData().forEach((key, value) ->
+                comparisonResultList.forEach(cr -> addKeyValue(cr, key)));
+    }
+
+    private void addKeyValue(ComparisonResult cr, String key) {
+        if (!cr.getData().containsKey(key)) {
+            cr.getData().put(key, 0L);
+        }
     }
 
     private ErrorCountInfo getErrorCountInfo(Map<String, List<Error>> groupedErrors) {

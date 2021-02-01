@@ -2,6 +2,8 @@ package edu.itu.wac.controller.rest;
 
 import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.service.ErrorService;
+import edu.itu.wac.service.request.ComparisonRequest;
+import edu.itu.wac.service.response.ComparisonResult;
 import edu.itu.wac.service.response.ErrorReportResponse;
 import edu.itu.wac.service.response.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +26,11 @@ public class ErrorReportRestController {
     @ResponseBody
     List<ErrorReportResponse> getWebsiteByAddress(@RequestParam @NotNull String address) {
         return errorReportService.findByWebsiteAddress(address);
+    }
+
+    @PostMapping("/compare-reports")
+    @ResponseBody
+    List<ComparisonResult> getWebsiteByAddress(@RequestBody ComparisonRequest request) {
+        return errorReportService.getComparisonData(request);
     }
 }

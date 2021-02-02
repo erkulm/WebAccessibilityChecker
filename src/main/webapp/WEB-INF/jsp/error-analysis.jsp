@@ -215,7 +215,7 @@
             method: "POST",
             contentType: 'application/json',
             data: JSON.stringify(comparisonRequest)
-        }).then(function(data) {
+        }).then(function (data) {
             console.log(data);
             var ctx = document.getElementById('canvas');
             var myChart = new Chart(ctx, {
@@ -227,10 +227,15 @@
                         data: Object.values(data[0].data),
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
                         borderWidth: 1
-                    },{
+                    }, {
                         label: data[1].address,
                         data: Object.values(data[1].data),
                         backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderWidth: 1
+                    }, {
+                        label: data[2].address,
+                        data: Object.values(data[2].data),
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
                         borderWidth: 1
                     }]
                 },
@@ -535,7 +540,7 @@
         <%--            </div>--%>
         <%--        </div>--%>
         <%} %>
-        <div class="col-md-6" id="canvasDiv" style="display:none;">
+        <div class="col-md-11" id="canvasDiv" style="display:none;">
             <div class="main-card mb-3 card" id="canvasInsideDiv">
                 <div class="card-body">
                     <h5 class="card-title">Karşılaştırmalı Hata Analiz Grafiği</h5>

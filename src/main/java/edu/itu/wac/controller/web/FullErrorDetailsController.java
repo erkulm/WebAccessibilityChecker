@@ -5,13 +5,17 @@ import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.service.SubPageErrorsService;
 import edu.itu.wac.service.response.ErrorReportResponse;
 import edu.itu.wac.service.response.ErrorResponse;
+import edu.itu.wac.service.response.SubPageErrorsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,8 +41,22 @@ public class FullErrorDetailsController {
                 .stream()
                 .flatMap(spe -> spe.getErrors().stream())
                 .collect(Collectors.toList());
+        if (!StringUtils.isEmpty(sort)) {
+            switch (sort) {
+                case "document_asc" ->
+                        errors.sort(Comparator.comparing(ErrorResponse::getDocument));
+                case "document_desc" ->
+                        errors.sort(Comparator.comparing(ErrorResponse::getDocument).reversed());
+                case "subpage_asc" ->
+                      errors.sort(Comparator.comparing(ErrorResponse::getSubPage));
+                default -> {
+                    errors.sort(Comparator.comparing(ErrorResponse::getSubPage).reversed());
+                }
+            }
+        }
 
         model.addObject("errors", errors);
+        model.addObject("errorReportId",errorReport.getId());
         return model;
     }
 

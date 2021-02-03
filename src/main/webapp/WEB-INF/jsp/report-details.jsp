@@ -34,23 +34,19 @@
                     <div class="scrolling menu">
                         <div class="item">
                             <div class="ui red empty circular label"></div>
-                            <a href="?website=${errorReport.website}&f=last_week" class="btn">Last 7 Days</a>
+                            <a href="?id=${errorReport.id}&filter=all" class="btn">All SubUrls</a>
                         </div>
                         <div class="item">
                             <div class="ui blue empty circular label"></div>
-                            <a href="?website=${errorReport.website}&filter=last_month" class="btn">Last Month</a>
+                            <a href="?id=${errorReport.id}&filter=has_error" class="btn">With Errors</a>
                         </div>
                         <div class="item">
                             <div class="ui black empty circular label"></div>
-                            <a href="?website=${errorReport.website}&filter=six_months" class="btn">Last 6 Months</a>
+                            <a href="?id=${errorReport.id}&filter=has_10" class="btn">10+ Errors</a>
                         </div>
                         <div class="item">
                             <div class="ui purple empty circular label"></div>
-                            <a href="?website=${errorReport.website}&filter=last_year" class="btn">Last Year</a>
-                        </div>
-                        <div class="item">
-                            <div class="ui orange empty circular label"></div>
-                            <a href="?website=${errorReport.website}&filter=two_year" class="btn">Last 2 Year</a>
+                            <a href="?id=${errorReport.id}&filter=has_25" class="btn">25+ Errors</a>
                         </div>
                     </div>
                 </div>
@@ -61,16 +57,16 @@
                 <div class="menu">
                     <div class="scrolling menu">
                         <div class="item">
-                            <a href="?website=${errorReport.website}&sort=error_asc" class="btn">Error Number by Ascending</a>
+                            <a href="?id=${errorReport.id}&sort=error_asc" class="btn">Error Number by Ascending</a>
                         </div>
                         <div class="item">
-                            <a href="?website=${errorReport.website}&sort=error_desc" class="btn">Error Number by Descending</a>
+                            <a href="?id=${errorReport.id}&sort=error_desc" class="btn">Error Number by Descending</a>
                         </div>
                         <div class="item">
-                            <a href="?website=${errorReport.website}&sort=date_asc" class="btn">Analysis Date by Ascending</a>
+                            <a href="?id=${errorReport.id}&sort=address_asc" class="btn">Address by Ascending</a>
                         </div>
                         <div class="item">
-                            <a href="?website=${errorReport.website}&sort=date_desc" class="btn">Analysis Date by Descending</a>
+                            <a href="?id=${errorReport.id}&sort=address_desc" class="btn">Address by Descending</a>
                         </div>
                     </div>
                 </div>

@@ -6,11 +6,13 @@ import edu.itu.wac.service.SubPageErrorsService;
 import edu.itu.wac.service.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -31,7 +33,19 @@ public class ErrorDetailsController {
         model.setViewName("error-details");
         List<ErrorResponse> errors;
         errors = subPageErrorsService.findById(id).getErrors();
+        if (!StringUtils.isEmpty(sort)) {
+            switch (sort) {
+                case "document_asc" ->
+                        errors.sort(Comparator.comparing(ErrorResponse::getDocument));
+                case "document_desc" ->
+                        errors.sort(Comparator.comparing(ErrorResponse::getDocument).reversed());
+                default -> {
+                    errors.sort(Comparator.comparing(ErrorResponse::getDocument));
+                }
+            }
+        }
         model.addObject("errors", errors);
+        model.addObject("subPageErrorId", id);
         return model;
     }
 

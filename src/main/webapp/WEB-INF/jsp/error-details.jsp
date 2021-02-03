@@ -22,38 +22,7 @@
         </div>
         <div class="row sort_row px-5">
             <p class="lead">Error Details</p>
-            <div class="ui floating dropdown labeled icon button ml-auto mr-5">
-                <i class="filter icon"></i>
-                <span class="text">Filter Posts</span>
-                <div class="menu">
-                    <div class="ui icon search input">
-                        <i class="search icon"></i>
-                        <input type="text" placeholder="Search tags...">
-                    </div>
-                    <div class="divider"></div>
-                    <div class="scrolling menu">
-                        <div class="item">
-                            <div class="ui red empty circular label"></div>
-                            <a href="?website=${errorReport.website}&f=last_week" class="btn">Last 7 Days</a>
-                        </div>
-                        <div class="item">
-                            <div class="ui blue empty circular label"></div>
-                            <a href="?website=${errorReport.website}&filter=last_month" class="btn">Last Month</a>
-                        </div>
-                        <div class="item">
-                            <div class="ui black empty circular label"></div>
-                            <a href="?website=${errorReport.website}&filter=six_months" class="btn">Last 6 Months</a>
-                        </div>
-                        <div class="item">
-                            <div class="ui purple empty circular label"></div>
-                            <a href="?website=${errorReport.website}&filter=last_year" class="btn">Last Year</a>
-                        </div>
-                        <div class="item">
-                            <div class="ui orange empty circular label"></div>
-                            <a href="?website=${errorReport.website}&filter=two_year" class="btn">Last 2 Year</a>
-                        </div>
-                    </div>
-                </div>
+            <div class=" ml-auto mr-5">
             </div>
             <div class="ui floating dropdown labeled icon button mr-5">
                 <i class="sort amount down icon"></i>
@@ -61,16 +30,10 @@
                 <div class="menu">
                     <div class="scrolling menu">
                         <div class="item">
-                            <a href="?website=${errorReport.website}&sort=error_asc" class="btn">Error Number by Ascending</a>
+                            <a href="?id=${subPageErrorId}&sort=document_asc" class="btn">Document by Ascending</a>
                         </div>
                         <div class="item">
-                            <a href="?website=${errorReport.website}&sort=error_desc" class="btn">Error Number by Descending</a>
-                        </div>
-                        <div class="item">
-                            <a href="?website=${errorReport.website}&sort=date_asc" class="btn">Analysis Date by Ascending</a>
-                        </div>
-                        <div class="item">
-                            <a href="?website=${errorReport.website}&sort=date_desc" class="btn">Analysis Date by Descending</a>
+                            <a href="?id=${subPageErrorId}&sort=document_desc" class="btn">Document by Descending</a>
                         </div>
                     </div>
                 </div>

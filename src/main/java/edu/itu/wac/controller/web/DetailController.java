@@ -4,6 +4,7 @@ package edu.itu.wac.controller.web;
 import edu.itu.wac.model.ErrorCategory;
 import edu.itu.wac.service.ErrorService;
 import edu.itu.wac.service.response.ErrorResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,7 +29,7 @@ public class DetailController {
 
     @PostMapping("/detail")
     @ResponseBody
-    public ModelAndView serveDetailPage(@RequestParam(required = false) String url) {
+    public ModelAndView serveDetailPage(@RequestParam(required = false) String url, @RequestParam(required = false) String deep) {
         ModelAndView model = new ModelAndView();
         model.setViewName("detail");
         Document doc = null;
@@ -39,6 +40,12 @@ public class DetailController {
         }
 
         List<ErrorResponse> errorDefList = errorService.generateReport(url,false);
+
+        if (!StringUtils.isEmpty(deep)){
+          if ("true".equals(deep)){
+            errorService.generateDeepReport(url,false);
+          }
+        }
 
         List<ErrorCategory> errorCategory = new ArrayList<>();
         for (ErrorResponse errorResponse : errorDefList) {

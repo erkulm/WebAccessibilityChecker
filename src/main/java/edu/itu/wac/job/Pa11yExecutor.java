@@ -55,6 +55,8 @@ public class Pa11yExecutor implements Job {
     errorReport.setNumberOfSubPages(subUrls.size());
     futureTasks.forEach(futureTask -> getPa11lResult(errorReport, futureTask));
 
+    executor.shutdown();
+
     return errorReport;
   }
 

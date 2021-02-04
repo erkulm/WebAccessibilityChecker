@@ -165,7 +165,7 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     public Workbook generateExcel(List<ErrorResponse> items) {
         Workbook wb = new HSSFWorkbook();
-        Sheet sheet = wb.createSheet("Special Fare Rates");
+        Sheet sheet = wb.createSheet("Accessibility Errors");
         sheet.setFitToPage(true);
         sheet.setHorizontallyCenter(true);
 

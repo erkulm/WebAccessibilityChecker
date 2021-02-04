@@ -6,13 +6,15 @@ import edu.itu.wac.repository.WebsiteRepository;
 import edu.itu.wac.service.ErrorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -25,28 +27,28 @@ public class ScheduledAccessibilityTester {
 
   @Autowired
   public ScheduledAccessibilityTester(
-      Pa11yExecutor pa11yExecutor, WebsiteRepository websiteRepository,ErrorService errorService) {
+      Pa11yExecutor pa11yExecutor, WebsiteRepository websiteRepository, ErrorService errorService) {
     this.pa11yExecutor = pa11yExecutor;
     this.websiteRepository = websiteRepository;
     this.errorService = errorService;
   }
 
-  @Scheduled(cron = "0 37 17 * * ?")
+  @Value("${accessibility.job.websites}")
+  private String[] websites;
+
+  @Scheduled(cron = "${accessibility.job.cron}")
   @Async
   public void startJobAfterApplicationReady() {
     long start = System.currentTimeMillis();
     log.info("Scheduled accessibility tests have started.");
-    Optional<Website> website = websiteRepository.findByAddress("https://www.vodafone.com.tr/");
-    if (website.isPresent()) {
+    List<Website> websites = websiteRepository.findByAddressIn(Arrays.asList(this.websites));
+    if (!websites.isEmpty()) {
       pa11yExecutor.numberOfThreads = 5;
-      ErrorReport errorReport = pa11yExecutor.executePally(website.get());
-      errorService.saveErrorReport(website.get(),start,errorReport);
+      for (Website website : websites) {
+        ErrorReport errorReport = pa11yExecutor.executePally(website);
+        errorService.saveErrorReport(website, start, errorReport);
+      }
     }
-    //    ScheduledExecutorService ses = Executors.newScheduledThreadPool(1);
-    //
-    //    Pa11yExecutor executor = new Pa11yExecutor();
-    //
-    //    ses.scheduleAtFixedRate(executor, 0, 60, TimeUnit.SECONDS);
     log.info(
         "Scheduled accessibility tests have been completed in "
             + (System.currentTimeMillis() - start) / 1000

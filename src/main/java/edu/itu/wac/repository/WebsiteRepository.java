@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface WebsiteRepository extends MongoRepository<Website, String> {
 
     Optional<Website> findByAddress(String address);
+    List<Website> findByAddressIn(List<String> adresses);
     List<Website> findAll();
 }

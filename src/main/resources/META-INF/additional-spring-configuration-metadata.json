@@ -19,5 +19,15 @@
       "name": "file.storage.path",
       "type": "java.lang.String",
       "description": "Description for file.storage.path."
+    },
+    {
+      "name": "accessibility.job.cron",
+      "type": "java.lang.String",
+      "description": "Description for accessibility.job.cron."
+    },
+    {
+      "name": "acceessibility.job.websites",
+      "type": "java.lang.String",
+      "description": "Description for acceessibility.job.websites."
     }
   ] }

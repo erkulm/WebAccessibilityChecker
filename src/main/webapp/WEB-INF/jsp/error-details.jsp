@@ -13,6 +13,29 @@
     <link rel="stylesheet" href="./style2.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
     <title>Error Details</title>
+    <script>
+        $(document).ready(function () {
+            $('#getexcel').on('click', function () {
+                $.ajax({
+                    url: '/get-file?type=subpage&id=${subPageErrorId}',
+                    method: 'GET',
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    success: function (data) {
+                        var a = document.createElement('a');
+                        var url = window.URL.createObjectURL(data);
+                        a.href = url;
+                        a.download = 'errors.xlsx';
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="mainDiv px-5 pt-5">
@@ -29,6 +52,10 @@
                 <span class="text">Sort</span>
                 <div class="menu">
                     <div class="scrolling menu">
+                        <button class="icon" type="button" id="getexcel">
+                            <i class="fa-file-excel"></i>
+                            Excel!
+                        </button>
                         <div class="item">
                             <a href="?id=${subPageErrorId}&sort=document_asc" class="btn">Document by Ascending</a>
                         </div>

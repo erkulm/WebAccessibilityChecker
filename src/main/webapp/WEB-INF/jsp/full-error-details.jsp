@@ -13,6 +13,30 @@
     <link rel="stylesheet" href="./style2.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
     <title>Error Details</title>
+    <script src="https://use.fontawesome.com/6ddb5bca4f.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#getexcel').on('click', function () {
+                $.ajax({
+                    url: '/get-file?type=report&id=${errorReportId}',
+                    method: 'GET',
+                    xhrFields: {
+                        responseType: 'blob'
+                    },
+                    success: function (data) {
+                        var a = document.createElement('a');
+                        var url = window.URL.createObjectURL(data);
+                        a.href = url;
+                        a.download = 'errors.xlsx';
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        window.URL.revokeObjectURL(url);
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <div class="mainDiv px-5 pt-5">
@@ -24,6 +48,11 @@
             <p class="lead">Error Details</p>
             <div class=" ml-auto mr-5">
             </div>
+            <button class="icon" type="button" id="getexcel">
+                <i class="fa-file-excel"></i>
+                Excel!
+            </button>
+
             <div class="ui floating dropdown labeled icon button mr-5">
                 <i class="sort amount down icon"></i>
                 <span class="text">Sort</span>

@@ -134,7 +134,7 @@ public class Pa11yUtil {
                                       String errorAddress, String document) {
         Error error = new Error();
         error.setWebsite(website);
-        error.setSubPage(subUrl);
+        error.setSubPage(!StringUtils.isEmpty(subUrl) ? subUrl : website.getAddress());
         error.setErrorDesc(errorDesc);
         error.setErrorScene(errorScene);
         error.setErrorAddress(errorAddress);

@@ -133,24 +133,32 @@ public class ErrorServiceImpl implements ErrorService {
         if (websiteResponse.getLatestTestDate() == null
                 || websiteResponse.getLatestTestDate().plusDays(testDayDifference).isBefore(LocalDateTime.now())) {
             long startTime = System.currentTimeMillis();
+            Website website = mapperFacade.map(websiteResponse, Website.class);
             ErrorReport errorReport = pa11yExecutor.executePally(
-                    mapperFacade.map(websiteResponse, Website.class));
+                    website);
 
-            List<Error> errors = errorReport.getSubPageErrors()
-                    .stream()
-                    .flatMap(spe -> spe.getErrors().stream())
-                    .collect(Collectors.toList());
-            errorRepository.saveAll(errors);
-            subPageErrorsRepository.saveAll(errorReport.getSubPageErrors());
-            errorReport.setWebsite(mapperFacade.map(websiteResponse, Website.class));
-            errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
-            errorReport.setTotalErrors(errors.size());
-            errorReport.setReportGenerationTime(System.currentTimeMillis()-startTime);
-            errorReportRepository.save(errorReport);
+            errorResponses = saveErrorReport(website, startTime, errorReport);
             websiteService.updateLatestTestDate(address);
         } else {
             errorResponses = findByWebsiteAddress(address);
         }
+        return errorResponses;
+    }
+
+    @Override
+    public List<ErrorResponse> saveErrorReport(Website website, long startTime, ErrorReport errorReport) {
+        List<ErrorResponse> errorResponses;
+        List<Error> errors = errorReport.getSubPageErrors()
+                .stream()
+                .flatMap(spe -> spe.getErrors().stream())
+                .collect(Collectors.toList());
+        errorRepository.saveAll(errors);
+        subPageErrorsRepository.saveAll(errorReport.getSubPageErrors());
+        errorReport.setWebsite(website);
+        errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
+        errorReport.setTotalErrors(errors.size());
+        errorReport.setReportGenerationTime(System.currentTimeMillis()- startTime);
+        errorReportRepository.save(errorReport);
         return errorResponses;
     }
 

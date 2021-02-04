@@ -30,6 +30,7 @@ public class Pa11yUtil {
 
     @LogExecutionTime
     public static ErrorReport runPa11y(Website website, String subUrl) {
+        long startTime = System.currentTimeMillis();
         ErrorReport errorReport = new ErrorReport();
         SubPageErrors subPageErrors = new SubPageErrors();
         subPageErrors.setSubPage(!StringUtils.isEmpty(subUrl) ? subUrl : website.getAddress());
@@ -123,6 +124,8 @@ public class Pa11yUtil {
 //                e.printStackTrace();
 //            }
         }
+        log.info("Accessibility test for " + (!StringUtils.isEmpty(subUrl) ? subUrl:website.getAddress()) +
+                " took " + (System.currentTimeMillis()-startTime)/1000 + " seconds.");
         return errorReport;
     }
 

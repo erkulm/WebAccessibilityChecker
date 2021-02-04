@@ -1,5 +1,7 @@
 package edu.itu.wac.service;
 
+import edu.itu.wac.entity.ErrorReport;
+import edu.itu.wac.entity.Website;
 import edu.itu.wac.service.request.ErrorRequest;
 import edu.itu.wac.service.request.WebsiteRequest;
 import edu.itu.wac.service.response.ErrorResponse;
@@ -21,6 +23,8 @@ public interface ErrorService {
     List<ErrorResponse> generateReport(String address, Boolean isHtmlHistoryEnabled);
 
     List<ErrorResponse> generateDeepReport(String address, Boolean isHtmlHistoryEnabled);
+
+    List<ErrorResponse> saveErrorReport(Website website, long startTime, ErrorReport errorReport);
 
     Workbook generateExcel(List<ErrorResponse> items);
 }

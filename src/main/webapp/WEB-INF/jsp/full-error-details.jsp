@@ -11,9 +11,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
     <link rel="stylesheet" href="./style2.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
     <title>Error Details</title>
-    <script src="https://use.fontawesome.com/6ddb5bca4f.js"></script>
+    <%--    <script src="https://use.fontawesome.com/6ddb5bca4f.js"></script>--%>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
         $(document).ready(function () {
             $('#getexcel').on('click', function () {
@@ -39,6 +39,28 @@
     </script>
 </head>
 <body>
+<div class="ui secondary  menu">
+    <a class="active item" href="/index">
+        Home
+    </a>
+    <a class="item" href="/history">
+        History
+    </a>
+    <a class="item">
+        Friends
+    </a>
+    <div class="right menu">
+        <div class="item">
+            <div class="ui icon input">
+                <input type="text" placeholder="Search...">
+                <i class="search link icon"></i>
+            </div>
+        </div>
+        <a class="ui item">
+            Logout
+        </a>
+    </div>
+</div>
 <div class="mainDiv px-5 pt-5">
     <div class="col">
         <div class="row">
@@ -48,9 +70,9 @@
             <p class="lead">Error Details</p>
             <div class=" ml-auto mr-5">
             </div>
-            <button class="icon" type="button" id="getexcel">
-                <i class="fa-file-excel"></i>
-                Excel!
+            <button class="ui button icon mr-2" style="border-width: 0" type="button" id="getexcel">
+                <i class="file excel icon"></i>
+                <span class="text">Excel</span>
             </button>
 
             <div class="ui floating dropdown labeled icon button mr-5">
@@ -75,7 +97,7 @@
             </div>
         </div>
     </div>
-    <div class="row historyTable">
+    <div class="row historyTable mt-2">
         <table class="ui celled compact table">
             <thead>
             <tr>

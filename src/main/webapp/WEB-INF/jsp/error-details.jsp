@@ -52,9 +52,9 @@
                 <span class="text">Sort</span>
                 <div class="menu">
                     <div class="scrolling menu">
-                        <button class="icon" type="button" id="getexcel">
-                            <i class="fa-file-excel"></i>
-                            Excel!
+                        <button class="ui button icon mr-2" style="border-width: 0" type="button" id="getexcel">
+                            <i class="file excel icon"></i>
+                            <span class="text">Excel</span>
                         </button>
                         <div class="item">
                             <a href="?id=${subPageErrorId}&sort=document_asc" class="btn">Document by Ascending</a>

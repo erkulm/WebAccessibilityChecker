@@ -5,11 +5,17 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
     <title>Web Accessibility Checker</title>
 </head>
 <body>
-
+<div class="px-4">
+    <div>
+        <%@include file="../static/top-menu.jsp" %>
+    </div>
+</div>
 <div class="container mt-5 pb-5">
+
     <form method="post" action="/detail">
         <h1 class="display-3 text-center mb-5">Welcome</h1>
         <div class="input-group urlInput">

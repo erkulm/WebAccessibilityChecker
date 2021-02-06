@@ -21,6 +21,7 @@
     <style> <%@include file="../static/style2.css"%> </style>
     <style> <%@include file="../static/main.css"%> </style>
     <script> <%@include file="../static/script.js"%> </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 
     <script>
@@ -294,28 +295,15 @@
 <body>
 <form name="form1" id="TheForm" method="post">
     <input type="image" id="image" alt="EngelsizWeb"
-           src="./css/Images/engelsizWeb2.png" onclick="returnToMainPage()">
-    <h3 style="margin-left:400px;margin-right:auto;margin-top:-40px">WEB SİTESİ HATA ANALİZ PANELİ</h3>
+           src="../images/logo.png" onclick="returnToMainPage()">
+    <h3 style="margin-left:400px;margin-right:auto;margin-top:-40px">Error Analysis Panel</h3>
     <div class="row" style="margin-left:auto;margin-right:auto;margin-top:50px">
         <div class="col-md-6 col-xl-4">
             <div class="card mb-3 widget-content bg-grow-early">
                 <div class="widget-content-wrapper text-white">
                     <div class="widget-content-left">
-                        <div class="widget-heading">Toplam Sayfa Sayısı</div>
-                        <div class="widget-subheading">Sitenin tüm sayfaları</div>
-                    </div>
-                    <div class="widget-content-right">
-                        <div class="widget-numbers text-white"><span>${errorReport.totalErrors}</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-xl-4">
-            <div class="card mb-3 widget-content bg-midnight-bloom">
-                <div class="widget-content-wrapper text-white">
-                    <div class="widget-content-left">
-                        <div class="widget-heading">Toplam Hata Sayısı</div>
-                        <div class="widget-subheading">Tüm site tarandığında</div>
+                        <div class="widget-heading">Total Pages</div>
+                        <div class="widget-subheading">All subpages of Website</div>
                     </div>
                     <div class="widget-content-right">
                         <div class="widget-numbers text-white"><span>${errorReport.numberOfSubPages}</span></div>
@@ -324,10 +312,23 @@
             </div>
         </div>
         <div class="col-md-6 col-xl-4">
+            <div class="card mb-3 widget-content bg-midnight-bloom">
+                <div class="widget-content-wrapper text-white">
+                    <div class="widget-content-left">
+                        <div class="widget-heading">Total Errors</div>
+                        <div class="widget-subheading">Including subpages</div>
+                    </div>
+                    <div class="widget-content-right">
+                        <div class="widget-numbers text-white"><span>${errorReport.totalErrors}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xl-4">
             <div class="card mb-3 widget-content bg-primary">
                 <div class="widget-content-wrapper text-white">
                     <div class="widget-content-left">
-                        <div class="widget-heading">En Çok Alınan Hata</div>
+                        <div class="widget-heading">Most Recurring Error</div>
                         <div class="widget-subheading">${errorCountInfoList.get(0).errorDesc}</div>
                     </div>
                     <div class="widget-content-right">
@@ -340,7 +341,7 @@
         <div class="col-md-6">
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <h5 class="card-title">EN ÇOK ALINAN HATALAR</h5>
+                    <h5 class="card-title">Most Recurring Errors</h5>
                     <canvas id="chart-area"></canvas>
                 </div>
             </div>

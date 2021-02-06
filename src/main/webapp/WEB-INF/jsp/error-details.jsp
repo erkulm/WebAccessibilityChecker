@@ -39,11 +39,14 @@
 </head>
 <body>
 <div class="mainDiv px-5 pt-5">
-    <div class="col">
+
+    <div class="col px4">
+        <div> <%@include file="../static/top-menu.jsp"%> </div>
+
         <div class="row">
             <p class="display-4 maintitle">Web Accessibility Analysis</p>
         </div>
-        <div class="row sort_row px-5">
+        <div class="row sort_row">
             <p class="lead">Error Details</p>
             <div class=" ml-auto mr-5">
             </div>

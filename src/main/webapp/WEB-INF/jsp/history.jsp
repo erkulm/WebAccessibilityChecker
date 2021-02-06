@@ -15,7 +15,9 @@
     <title>Search History</title>
 </head>
 <body>
-<div class="mainDiv px-5 pt-5">
+<div class="mainDiv px-4">
+    <div> <%@include file="../static/top-menu.jsp"%> </div>
+
     <div class="col">
         <div class="row">
             <p class="display-4 maintitle">Web Accessibility Analysis</p>

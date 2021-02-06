@@ -39,28 +39,8 @@
     </script>
 </head>
 <body>
-<div class="ui secondary  menu">
-    <a class="active item" href="/index">
-        Home
-    </a>
-    <a class="item" href="/history">
-        History
-    </a>
-    <a class="item">
-        Friends
-    </a>
-    <div class="right menu">
-        <div class="item">
-            <div class="ui icon input">
-                <input type="text" placeholder="Search...">
-                <i class="search link icon"></i>
-            </div>
-        </div>
-        <a class="ui item">
-            Logout
-        </a>
-    </div>
-</div>
+<div> <%@include file="../static/top-menu.jsp"%> </div>
+
 <div class="mainDiv px-5 pt-5">
     <div class="col">
         <div class="row">

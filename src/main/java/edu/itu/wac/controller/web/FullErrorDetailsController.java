@@ -43,15 +43,14 @@ public class FullErrorDetailsController {
                 .collect(Collectors.toList());
         if (!StringUtils.isEmpty(sort)) {
             switch (sort) {
-                case "document_asc" ->
+                case "document_asc" :
                         errors.sort(Comparator.comparing(ErrorResponse::getDocument));
-                case "document_desc" ->
+                case "document_desc" :
                         errors.sort(Comparator.comparing(ErrorResponse::getDocument).reversed());
-                case "subpage_asc" ->
+                case "subpage_asc" :
                       errors.sort(Comparator.comparing(ErrorResponse::getSubPage));
-                default -> {
+                default :
                     errors.sort(Comparator.comparing(ErrorResponse::getSubPage).reversed());
-                }
             }
         }
 

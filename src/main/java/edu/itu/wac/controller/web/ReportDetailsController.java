@@ -41,25 +41,24 @@ public class ReportDetailsController {
     ErrorReportResponse errorReport = errorReportService.findById(id);
     if (!StringUtils.isEmpty(sort)) {
       switch (sort) {
-        case "address_asc" -> errorReport
+        case "address_asc" : errorReport
                 .getSubPageErrors()
                 .sort(Comparator.comparing(SubPageErrorsResponse::getSubPage));
-        case "address_desc" -> errorReport
+        case "address_desc" : errorReport
                 .getSubPageErrors()
                 .sort(Comparator.comparing(SubPageErrorsResponse::getSubPage).reversed());
-        case "error_asc" -> errorReport
+        case "error_asc" : errorReport
                 .getSubPageErrors()
                 .sort(
                         Comparator.comparing(
                                 subPageErrorsResponse -> subPageErrorsResponse.getErrors().size()));
-        default -> {
+        default :
           errorReport
                   .getSubPageErrors()
                   .sort(
                           Comparator.comparing(
                                   subPageErrorsResponse -> subPageErrorsResponse.getErrors().size()));
           Collections.reverse(errorReport.getSubPageErrors());
-        }
       }
     }
     if (!StringUtils.isEmpty(filter)) {

@@ -50,10 +50,10 @@ public class WebsiteServiceImpl implements WebsiteService {
     @Override
     public WebsiteResponse createNewWebsiteFromAddress(String address){
         Optional<Website> oldWebsite = websiteRepository.findByAddress(address);
-        if (oldWebsite.isEmpty()){
+        if (!oldWebsite.isPresent()){
             Website website = new Website();
             Optional<WebsiteCategory> general = websiteCategoryRepository.findByName("GENERAL");
-            if (general.isEmpty()){
+            if (!general.isPresent()){
                 WebsiteCategory category = new WebsiteCategory();
                 category.setName("GENERAL");
                 category = websiteCategoryRepository.save(category);

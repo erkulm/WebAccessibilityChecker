@@ -16,7 +16,9 @@
 </head>
 <body>
 <div class="mainDiv px-5 pt-5">
-    <div> <%@include file="../static/top-menu.jsp"%> </div>
+    <div>
+        <%@include file="../static/top-menu.jsp" %>
+    </div>
     <div class="col">
         <div class="row">
             <p class="display-4 maintitle">Web Accessibility Analysis</p>
@@ -74,7 +76,7 @@
             </div>
         </div>
     </div>
-    <div class="row historyTable">
+    <div class="row historyTable mt-2">
         <table class="ui celled compact table">
             <thead>
             <tr>
@@ -107,20 +109,26 @@
                     <td>
                         <div class="px-4 row_divs">
                             <p>${error.subPage}</p>
-                            <div class="badge badge-primary history_badge px-2 py-1">
+                            <div class="badge badge-primary history_badge px-2 py-1" style="float: right">
                                 <p class="history_date">${errorReport.createdDate}</p>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <div class="px-4 row_divs">
-                            <p>${error.errors!= null ? error.errors.size():0}</p>
-                            <a href="/error-details?id=${error.id}">Details</a>
+                        <div class="px-4 row_divs grid">
+                            <div class="input-group">
+                                <p class="mr-3">${error.errors!= null ? error.errors.size():0}</p>
+                                <i class="info circle icon"></i>
+                                <a href="/error-details?id=${error.id}">View Errors</a>
+                            </div>
                         </div>
                     </td>
                     <td>
                         <div class="px-4 row_divs">
-                            <a href="/detail-history?subPageErrorsId=${error.id}">Details</a>
+                            <div class="input-group">
+                                <i class="info circle icon"></i>
+                                <a href="/detail-history?subPageErrorsId=${error.id}">View Details</a>
+                            </div>
                         </div>
                     </td>
                 </tr>

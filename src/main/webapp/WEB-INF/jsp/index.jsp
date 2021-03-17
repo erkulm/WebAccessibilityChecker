@@ -19,13 +19,13 @@
     <form method="post" action="/detail">
         <h1 class="display-3 text-center mb-5">Welcome</h1>
         <div class="input-group urlInput">
-            <label for="deep_check">
-                <small>Full Inspection</small>
+            <div class="ui checkbox mt-1 mr-2">
                 <input id="deep_check" class="fa-money-check-alt" type="checkbox" name="deep"/>
-            </label>
+                <label>Full Inspection</label>
+            </div>
             <input type="text" class="form-control" name="url">
             <div class="input-group-append">
-                <button class="btn btn-success" type="submit">Go!</button>
+                <button class="btn btn-success" type="submit">Test!</button>
             </div>
         </div>
     </form>

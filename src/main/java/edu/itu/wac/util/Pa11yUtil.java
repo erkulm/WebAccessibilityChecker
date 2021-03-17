@@ -5,13 +5,16 @@ import edu.itu.wac.entity.ErrorReport;
 import edu.itu.wac.entity.SubPageErrors;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.etc.LogExecutionTime;
+import edu.itu.wac.repository.ErrorRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Slf4j
+@Component
 public class Pa11yUtil {
 
     @Value("${pa11y.path}")
@@ -27,6 +31,9 @@ public class Pa11yUtil {
 
     @Value("${file.storage.path:/usr/mahmut/Downloads/data/}")
     private static String fileStoragePath;
+
+    @Autowired
+    ErrorRepository errorRepository;
 
     @LogExecutionTime
     public static ErrorReport runPa11y(Website website, String subUrl) {
@@ -111,8 +118,12 @@ public class Pa11yUtil {
         }
 
         String fileUUID = UUID.randomUUID().toString();
+        String location = "/Users/mahmut/Downloads/data/";
+        if (SystemUtils.IS_OS_WINDOWS){
+            location = "C:\\Users\\Kafein\\Downloads\\data\\";
+        }
         subPageErrors.setHtmlPath(
-                "/Users/mahmut/Downloads/data/" +
+                location +
                         fileUUID +
                         ".zip");
         if (doc!=null) {

@@ -50,15 +50,15 @@
             <p class="lead">Error Details</p>
             <div class=" ml-auto mr-5">
             </div>
+            <button class="ui button icon mr-2" style="border-width: 0" type="button" id="getexcel">
+                <i class="file excel icon"></i>
+                <span class="text">Excel</span>
+            </button>
             <div class="ui floating dropdown labeled icon button mr-5">
                 <i class="sort amount down icon"></i>
                 <span class="text">Sort</span>
                 <div class="menu">
                     <div class="scrolling menu">
-                        <button class="ui button icon mr-2" style="border-width: 0" type="button" id="getexcel">
-                            <i class="file excel icon"></i>
-                            <span class="text">Excel</span>
-                        </button>
                         <div class="item">
                             <a href="?id=${subPageErrorId}&sort=document_asc" class="btn">Document by Ascending</a>
                         </div>

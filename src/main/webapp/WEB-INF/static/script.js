@@ -54,7 +54,7 @@ $(document).ready(function(){
 
 	$(".info").click(function(){
 
-		var idname = $(this).next().attr("id");
+		var idname = $(this).attr("id");
 		if(!idname){
 			idname = $(this).next().children(":last-child").attr("id");
 		}

@@ -56,7 +56,7 @@ public class DetailHistoryController {
             String desc = errorResponse.getErrorDesc();
             String id = errorResponse.getId();
             ErrorCategory errorCat = new ErrorCategory();
-            errorCat.setErrorId(id);
+            errorCat.setErrorId("error"+id);
             errorCat.setHeader(header);
             errorCat.setErrorDesc(desc);
             errorCategory.add(errorCat);
@@ -65,8 +65,8 @@ public class DetailHistoryController {
             for (Element error : errors) {
                 error.parent().addClass("item");
                 error.addClass("error");
-                error.attr("id", errorResponse.getId());
-                error.parent().prepend("<div class='info'>"
+                error.attr("id", "error"+errorResponse.getId());
+                error.parent().prepend("<div class='info' id=\"info_"+errorResponse.getId()+"\">"
                         + "<i class=\"fas fa-exclamation-triangle infoPng\"></i>"
                         + "<a class='infoMsg'><span class='msg'>" + "ERROR"
                         + "</span><div class='detail'>" + errorResponse.getErrorDesc() + "</div></a>"

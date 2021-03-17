@@ -22,6 +22,12 @@
 </head>
 <body>
 
+<div class="px-4">
+	<div>
+		<%@include file="../static/top-menu.jsp" %>
+	</div>
+</div>
+
 
 <div class="row">
 
@@ -87,7 +93,7 @@
 						</tr>
 
 						<tr class="extra "><td colspan="4" ><%=er.getErrorDesc()%></td></tr>
-						<tr class="extra mb-1 "><td colspan="4"><%=er.getErrorArea()%></td></tr>
+						<tr class="extra mb-1 "><td colspan="4"><%=er.getErrorAddress()%></td></tr>
 
 						<%
 

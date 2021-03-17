@@ -16,6 +16,9 @@ import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -47,6 +50,7 @@ public class ErrorReportServiceImpl implements ErrorReportService {
     }
 
 
+    @Cacheable("errorReports")
     @Override
     public List<ErrorReportResponse> getAll() {
         return mapperFacade.mapAsList(errorReportRepository.findAll(), ErrorReportResponse.class);
@@ -56,6 +60,9 @@ public class ErrorReportServiceImpl implements ErrorReportService {
     public List<ErrorReportResponse> findByWebsiteAddress(String address) {
         WebsiteResponse website = websiteService.findByAddress(address);
         if (website != null) {
+//            return getAll().stream()
+//                    .filter(er->website.getAddress().equalsIgnoreCase(address))
+//                    .collect(Collectors.toList());
             List<ErrorReport> errorReports = errorReportRepository.findAllByWebsite_Id(
                     website.getId());
             return mapperFacade.mapAsList(errorReports, ErrorReportResponse.class);
@@ -115,6 +122,12 @@ public class ErrorReportServiceImpl implements ErrorReportService {
             comparisonResultList.forEach(c -> addZeroErrors(c, comparisonResultList));
         }
         return comparisonResultList;
+    }
+
+    @Override
+    @CachePut(value="errorReports")
+    public ErrorReport save(ErrorReport errorReport) {
+        return errorReportRepository.save(errorReport);
     }
 
     private void addZeroErrors(ComparisonResult c, List<ComparisonResult> comparisonResultList) {

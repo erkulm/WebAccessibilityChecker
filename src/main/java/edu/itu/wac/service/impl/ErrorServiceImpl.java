@@ -6,7 +6,7 @@ import edu.itu.wac.entity.Website;
 import edu.itu.wac.enums.ErrorExcelHeaders;
 import edu.itu.wac.etc.LogExecutionTime;
 import edu.itu.wac.job.Pa11yExecutor;
-import edu.itu.wac.repository.ErrorReportRepository;
+import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.repository.ErrorRepository;
 import edu.itu.wac.repository.SubPageErrorsRepository;
 import edu.itu.wac.service.ErrorService;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class ErrorServiceImpl implements ErrorService {
     private final WebsiteService websiteService;
     private final ErrorRepository errorRepository;
-    private final ErrorReportRepository errorReportRepository;
+    private final ErrorReportService errorReportService;
     private final SubPageErrorsRepository subPageErrorsRepository;
     private final Pa11yExecutor pa11yExecutor;
     private final MapperFacade mapperFacade;
@@ -48,13 +48,13 @@ public class ErrorServiceImpl implements ErrorService {
     @Autowired
     public ErrorServiceImpl(WebsiteService websiteService,
                             ErrorRepository errorRepository,
-                            ErrorReportRepository errorReportRepository,
+                            ErrorReportService errorReportService,
                             SubPageErrorsRepository subPageErrorsRepository,
                             Pa11yExecutor pa11yExecutor,
                             @Qualifier(value = "errorServiceMapper") MapperFacade mapperFacade) {
         this.websiteService = websiteService;
         this.errorRepository = errorRepository;
-        this.errorReportRepository = errorReportRepository;
+        this.errorReportService = errorReportService;
         this.subPageErrorsRepository = subPageErrorsRepository;
         this.pa11yExecutor = pa11yExecutor;
         this.mapperFacade = mapperFacade;
@@ -114,7 +114,7 @@ public class ErrorServiceImpl implements ErrorService {
             errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
             errorReport.setTotalErrors(errors.size());
             errorReport.setReportGenerationTime(System.currentTimeMillis()-startTime);
-            errorReportRepository.save(errorReport);
+            errorReportService.save(errorReport);
             websiteService.updateLatestTestDate(address);
         } else {
             errorResponses = findByWebsiteAddress(address);
@@ -158,7 +158,7 @@ public class ErrorServiceImpl implements ErrorService {
         errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
         errorReport.setTotalErrors(errors.size());
         errorReport.setReportGenerationTime(System.currentTimeMillis()- startTime);
-        errorReportRepository.save(errorReport);
+        errorReportService.save(errorReport);
         return errorResponses;
     }
 
@@ -228,7 +228,7 @@ public class ErrorServiceImpl implements ErrorService {
         titleCell.setCellValue("ERROR REPORT");
         titleCell.setCellStyle(titleStyle);
         // range of style for title, uses excel notation
-        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$U$1"));
+        sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$F$1"));
 
         rowNum++;
         Row headerRow = sheet.createRow(rowNum);

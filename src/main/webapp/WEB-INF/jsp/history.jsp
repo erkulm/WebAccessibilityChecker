@@ -23,9 +23,9 @@
             <p class="display-4 maintitle">Web Accessibility Analysis</p>
         </div>
         <div class="row">
-            <form action="/history">
+            <form action="/history" class="w-100">
                 <div class="ui labeled large icon input w-75">
-                    <div class="ui label">https://</div>
+                    <div class="ui label">URL</div>
                         <input type="text" name="website" placeholder="Enter Url..." value="${website}">
                     <button class="ui button historySearchButton primary" type="submit">
                         <i class="search icon"></i>
@@ -33,7 +33,7 @@
                 </div>
             </form>
         </div>
-        <div class="row sort_row px-5">
+        <div class="row sort_row px-5 py-5">
             <p class="lead">Test History</p>
             <div class="ui floating dropdown labeled icon button ml-auto mr-5">
                 <i class="filter icon"></i>
@@ -110,6 +110,11 @@
                         Total SubUrl
                     </div>
                 </th>
+                <th>
+                    <div>
+                        Generation Time(sn)
+                    </div>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -124,21 +129,26 @@
                         <div class="px-4 row_divs">
                             <a href="/error-analysis?id=${errorReport.id}" class="ui inverted red button">Error Analysis Panel</a>
                             <p>${errorReport.website.address}</p>
-                            <div class="badge badge-primary history_badge px-2 py-1">
-                                <p class="history_date">${errorReport.createdDate}</p>
+                            <div class="badge badge-primary history_badge px-2 py-1" style="float: right">
+                                <p  class="history_date">${errorReport.createdDate}</p>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <div class="px-4 row_divs">
+                        <div class="px-4 row_divs input-group">
+                            <p class="mr-4 mt-2">${errorReport.totalErrors}</p>
                             <a href="/full-error-details?id=${errorReport.id}" class="ui inverted red button">See All Errors</a>
-                            <p>${errorReport.totalErrors}</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="px-4 row_divs input-group">
+                            <p class="mr-4 mt-2">${errorReport.numberOfSubPages}</p>
+                            <a href="/report-details?id=${errorReport.id}" class="ui inverted red button">See All SubUrls</a>
                         </div>
                     </td>
                     <td>
                         <div class="px-4 row_divs">
-                            <a href="/report-details?id=${errorReport.id}" class="ui inverted red button">See All SubUrls</a>
-                            <p>${errorReport.numberOfSubPages}</p>
+                            <p>${errorReport.reportGenerationTime/1000}</p>
                         </div>
                     </td>
                 </tr>

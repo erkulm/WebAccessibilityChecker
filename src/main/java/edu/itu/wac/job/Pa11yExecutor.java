@@ -50,7 +50,7 @@ public class Pa11yExecutor implements Job {
     subUrls.forEach(subUrl -> addNewFutureTask(futureTasks, subUrl));
     futureTasks.forEach(executor::execute);
 
-    waitIfNotAllTasksAreDone(futureTasks);
+//    waitIfNotAllTasksAreDone(futureTasks);
     ErrorReport errorReport = new ErrorReport();
     errorReport.setNumberOfSubPages(subUrls.size());
     futureTasks.forEach(futureTask -> getPa11lResult(errorReport, futureTask));

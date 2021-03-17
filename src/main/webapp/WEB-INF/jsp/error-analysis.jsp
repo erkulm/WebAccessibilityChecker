@@ -219,26 +219,23 @@
         }).then(function (data) {
             console.log(data);
             var ctx = document.getElementById('canvas');
+            var dataForChart = [];
+            var backgroundColors = [];
+            backgroundColors.push('rgba(255, 99, 132, 0.2)');
+            backgroundColors.push('rgba(54, 162, 235, 0.2)');
+            backgroundColors.push('rgba(102,235,54)');
+            backgroundColors.push('rgba(235,54,54)');
+            for (var i=0;i<data.length;i++){
+                dataForChart.push({label:data[i].address,
+                    data:Object.values(data[i].data),
+                    backgroundColor:backgroundColors[i],
+                    borderWidth: 1})
+            }
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: Object.keys(data[0].data),
-                    datasets: [{
-                        label: data[0].address,
-                        data: Object.values(data[0].data),
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderWidth: 1
-                    }, {
-                        label: data[1].address,
-                        data: Object.values(data[1].data),
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderWidth: 1
-                    }, {
-                        label: data[2].address,
-                        data: Object.values(data[2].data),
-                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                        borderWidth: 1
-                    }]
+                    datasets: dataForChart
                 },
                 options: {
                     scales: {
@@ -285,9 +282,8 @@
 
 
     function returnToMainPage() {
-        document.form1.action = "WACControlCenter?action=returnToMainPage";
+        document.form1.action = "/index";
         form1.submit();
-
     }
 </script>
 
@@ -341,7 +337,7 @@
         <div class="col-md-6">
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <h5 class="card-title">Most Recurring Errors</h5>
+                    <h5 class="card-title">MOST RECURRING ERRORS</h5>
                     <canvas id="chart-area"></canvas>
                 </div>
             </div>
@@ -371,14 +367,14 @@
         </div>
         <div class="col-md-15">
             <div class="main-card mb-3 card">
-                <div class="card-body"><h5 class="card-title">Hata Detay Tablosu</h5>
+                <div class="card-body"><h5 class="card-title">ERROR DETAIL TABLE</h5>
                     <table class="mb-0 table table-hover">
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Hata Dokümanı</th>
-                            <th>Hata Açıklaması</th>
-                            <th>Hata Sayısı</th>
+                            <th>WCAG Document</th>
+                            <th>Error Description</th>
+                            <th>Number of Errors</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -399,15 +395,14 @@
         <div class="col-md-6" style="margin-top:40px;">
             <div class="mb-3 card">
                 <div class="card-header-title">
-                    <h5 class="card-title">Karşılaştırılacak Websiteleri</h5>
+                    <h5 class="card-title">Websites to Compare</h5>
                 </div>
                 <div>
-                    <p2 style="color:red">En fazla 3 websitesi karşılaştırılabilir</p2>
+                    <p2 style="color:red">Maximum number of 4 websites can be compared</p2>
                 </div>
                 <div class="card-header-tab card-header">
                     <ul class="nav">
-                        <li class="nav-item"><a data-toggle="tab" href="#tab-eg5-0" class="active nav-link">Tüm
-                            Websiteler</a><label id="label-eg5-0" class="customLabel">2</label>
+                        <li class="nav-item"><a data-toggle="tab" href="#tab-eg5-0" class="active nav-link">All Websites</a><label id="label-eg5-0" class="customLabel">2</label>
                         <li class="nav-item"><a data-toggle="tab" href="#tab-eg5-1" class="nav-link">Sektördeki
                             Websiteler</a><label id="label-eg5-1" class="customLabel">1</label>
                         <li class="nav-item"><a data-toggle="tab" href="#tab-eg5-2"

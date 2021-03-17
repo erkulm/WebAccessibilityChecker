@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class DetailController {
@@ -39,12 +40,15 @@ public class DetailController {
             System.err.println("Error in given url!");
         }
 
-        List<ErrorResponse> errorDefList = errorService.generateReport(url,false);
+        List<ErrorResponse> errorDefList = null;
 
         if (!StringUtils.isEmpty(deep)){
-          if ("true".equals(deep)){
-            errorService.generateDeepReport(url,false);
+          if ("on".equals(deep)){
+              List<ErrorResponse> errorResponses = errorService.generateDeepReport(url, false);
+             errorDefList= errorResponses.stream().filter(er->url.equals(er.getSubPage())).collect(Collectors.toList());
           }
+        }else{
+          errorDefList = errorService.generateReport(url,false);
         }
 
         List<ErrorCategory> errorCategory = new ArrayList<>();
@@ -62,8 +66,8 @@ public class DetailController {
             for (Element error : errors) {
                 error.parent().addClass("item");
                 error.addClass("error");
-                error.attr("id", errorResponse.getId());
-                error.parent().prepend("<div class='info'>"
+                error.attr("id", "error"+errorResponse.getId());
+                error.parent().prepend("<div class='info' id=\"info_"+errorResponse.getId()+"\">"
                         + "<i class=\"fas fa-exclamation-triangle infoPng\"></i>"
                         + "<a class='infoMsg'><span class='msg'>" + "ERROR"
                         + "</span><div class='detail'>" + errorResponse.getErrorDesc() + "</div></a>"

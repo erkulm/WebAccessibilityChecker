@@ -35,13 +35,14 @@ public class ErrorDetailsController {
         errors = subPageErrorsService.findById(id).getErrors();
         if (!StringUtils.isEmpty(sort)) {
             switch (sort) {
-                case "document_asc" ->
-                        errors.sort(Comparator.comparing(ErrorResponse::getDocument));
-                case "document_desc" ->
-                        errors.sort(Comparator.comparing(ErrorResponse::getDocument).reversed());
-                default -> {
+                case "document_asc" :
                     errors.sort(Comparator.comparing(ErrorResponse::getDocument));
-                }
+                    break;
+                case "document_desc" :
+                    errors.sort(Comparator.comparing(ErrorResponse::getDocument).reversed());
+                    break;
+                default :
+                    errors.sort(Comparator.comparing(ErrorResponse::getDocument));
             }
         }
         model.addObject("errors", errors);

@@ -41,18 +41,21 @@ public class ReportDetailsController {
     ErrorReportResponse errorReport = errorReportService.findById(id);
     if (!StringUtils.isEmpty(sort)) {
       switch (sort) {
-        case "address_asc" -> errorReport
+        case "address_asc" : errorReport
                 .getSubPageErrors()
                 .sort(Comparator.comparing(SubPageErrorsResponse::getSubPage));
-        case "address_desc" -> errorReport
+                break;
+        case "address_desc" : errorReport
                 .getSubPageErrors()
                 .sort(Comparator.comparing(SubPageErrorsResponse::getSubPage).reversed());
-        case "error_asc" -> errorReport
+                break;
+        case "error_asc" : errorReport
                 .getSubPageErrors()
                 .sort(
                         Comparator.comparing(
                                 subPageErrorsResponse -> subPageErrorsResponse.getErrors().size()));
-        default -> {
+                break;
+        default : {
           errorReport
                   .getSubPageErrors()
                   .sort(

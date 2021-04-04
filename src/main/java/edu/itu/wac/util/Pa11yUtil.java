@@ -52,7 +52,6 @@ public class Pa11yUtil {
         ProcessBuilder builder = null;
         Process pally = null;
         if (SystemUtils.IS_OS_MAC) {
-            String[] arguments = new String[]{website.getAddress()};
             try {
                 pally = Runtime.getRuntime().exec("/usr/local/lib/node_modules/pa11y/bin/pa11y.js " + website.getAddress());
             } catch (IOException e) {
@@ -64,13 +63,19 @@ public class Pa11yUtil {
         } else if (SystemUtils.IS_OS_WINDOWS) {
             builder = new ProcessBuilder("cmd.exe", "/c",
                     "pa11y " + (!StringUtils.isEmpty(subUrl)?subUrl: website.getAddress()));
+        } else if (SystemUtils.IS_OS_LINUX){
+            try {
+                pally = Runtime.getRuntime().exec("/home/ec2-user/.nvm/versions/node/v15.13.0/lib/node_modules/pa11y/bin/pa11y.js " + website.getAddress());
+            } catch (IOException e) {
+                log.error(ExceptionUtils.getStackTrace(e));
+            }
         }
         if (builder != null)
             builder.redirectErrorStream(true);
         Process p;
         try {
             BufferedReader r;
-            if (SystemUtils.IS_OS_MAC) {
+            if (SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_LINUX) {
                 r = new BufferedReader(new InputStreamReader(pally.getInputStream(), "UTF8"), 8);
             } else {
                 p = builder.start();
@@ -121,14 +126,19 @@ public class Pa11yUtil {
         String location = "/Users/mahmut/Downloads/data/";
         if (SystemUtils.IS_OS_WINDOWS){
             location = "C:\\Users\\Kafein\\Downloads\\data\\";
+        }if (SystemUtils.IS_OS_LINUX){
+            location = "/home/ec2-user/data/";
         }
         subPageErrors.setHtmlPath(
                 location +
                         fileUUID +
                         ".zip");
         if (doc!=null) {
-            ZipUtil.zip(doc.outerHtml().getBytes(StandardCharsets.UTF_8),"C:\\Users\\Kafein\\Downloads\\data\\",fileUUID);
-
+            if (SystemUtils.IS_OS_WINDOWS){
+                ZipUtil.zip(doc.outerHtml().getBytes(StandardCharsets.UTF_8),"C:\\Users\\Kafein\\Downloads\\data\\",fileUUID);
+            }else if(SystemUtils.IS_OS_LINUX){
+                ZipUtil.zip(doc.outerHtml().getBytes(StandardCharsets.UTF_8),"/home/ec2-user/data/",fileUUID);
+            }
 //            try (FileOutputStream writer = new FileOutputStream(new File(subPageErrors.getHtmlPath()))) {
 //                writer.write(doc.outerHtml().getBytes());
 //            } catch (IOException e) {

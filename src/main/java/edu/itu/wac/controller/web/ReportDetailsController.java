@@ -44,21 +44,25 @@ public class ReportDetailsController {
         case "address_asc" : errorReport
                 .getSubPageErrors()
                 .sort(Comparator.comparing(SubPageErrorsResponse::getSubPage));
+                break;
         case "address_desc" : errorReport
                 .getSubPageErrors()
                 .sort(Comparator.comparing(SubPageErrorsResponse::getSubPage).reversed());
+                break;
         case "error_asc" : errorReport
                 .getSubPageErrors()
                 .sort(
                         Comparator.comparing(
                                 subPageErrorsResponse -> subPageErrorsResponse.getErrors().size()));
-        default :
+                break;
+        default : {
           errorReport
                   .getSubPageErrors()
                   .sort(
                           Comparator.comparing(
                                   subPageErrorsResponse -> subPageErrorsResponse.getErrors().size()));
           Collections.reverse(errorReport.getSubPageErrors());
+        }
       }
     }
     if (!StringUtils.isEmpty(filter)) {

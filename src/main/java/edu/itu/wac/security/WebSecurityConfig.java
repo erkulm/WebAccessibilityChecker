@@ -1,5 +1,7 @@
 package edu.itu.wac.security;
 
+import edu.itu.wac.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -19,13 +21,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter { // (1)
         return new BCryptPasswordEncoder();
     }
 
+    @Autowired
+    UserService userService;
+
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("user1").password(passwordEncoder().encode("user1Pass")).roles("USER")
-                .and()
-                .withUser("user2").password(passwordEncoder().encode("user2Pass")).roles("USER")
-                .and()
-                .withUser("mahmut").password(passwordEncoder().encode("SA")).roles("ADMIN");
+        auth.userDetailsService(userService);
     }
 
     @Override

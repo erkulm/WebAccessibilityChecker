@@ -24,11 +24,23 @@ import java.util.UUID;
 @Component
 public class Pa11yUtil {
 
-    @Value("${pa11y.path}")
-    private static String pa11yPath;
+    public static String pa11yPath;
 
-    @Value("${file.storage.path:/usr/mahmut/Downloads/data/}")
     private static String fileStoragePath;
+
+    @Value("${pa11y.path}")
+    public void setPa11yPath(String pa11yPath){
+        Pa11yUtil.pa11yPath = pa11yPath;
+    }
+
+    @Value("${file.storage.path}")
+    public void setFileStoragePath(String fileStoragePath){
+        Pa11yUtil.fileStoragePath = fileStoragePath;
+    }
+
+    public Pa11yUtil(){
+        // explicit constructor for @values
+    }
 
     @LogExecutionTime
     public static ErrorReport runPa11y(Website website, String subUrl) {
@@ -46,25 +58,17 @@ public class Pa11yUtil {
         String document = null;
         ProcessBuilder builder = null;
         Process pally = null;
-        if (SystemUtils.IS_OS_MAC) {
+        if (SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_LINUX) {
             try {
-                pally = Runtime.getRuntime().exec("/usr/local/lib/node_modules/pa11y/bin/pa11y.js " + website.getAddress());
+                pally = Runtime.getRuntime().exec(pa11yPath + website.getAddress());
             } catch (IOException e) {
                 log.error(ExceptionUtils.getStackTrace(e));
             }
-//            builder = new ProcessBuilder("pa/1y", website.getAddress());
-//            builder = new ProcessBuilder("osascript", "-e",
-//                    "tell application \"Terminal\" to do script \"pa11y "+website.getSubUrl()+"\"");
         } else if (SystemUtils.IS_OS_WINDOWS) {
             builder = new ProcessBuilder("cmd.exe", "/c",
                     "pa11y " + (!StringUtils.isEmpty(subUrl)?subUrl: website.getAddress()));
-        } else if (SystemUtils.IS_OS_LINUX){
-            try {
-                pally = Runtime.getRuntime().exec("/home/ec2-user/.nvm/versions/node/v15.13.0/lib/node_modules/pa11y/bin/pa11y.js " + website.getAddress());
-            } catch (IOException e) {
-                log.error(ExceptionUtils.getStackTrace(e));
-            }
         }
+
         if (builder != null)
             builder.redirectErrorStream(true);
         Process p;
@@ -118,27 +122,12 @@ public class Pa11yUtil {
         }
 
         String fileUUID = UUID.randomUUID().toString();
-        String location = "/Users/mahmut/Downloads/data/";
-        if (SystemUtils.IS_OS_WINDOWS){
-            location = "C:\\Users\\Kafein\\Downloads\\data\\";
-        }else if (SystemUtils.IS_OS_LINUX){
-            location = "/home/ec2-user/data/";
-        }
         subPageErrors.setHtmlPath(
-                location +
+                fileStoragePath +
                         fileUUID +
                         ".zip");
         if (doc!=null) {
-            if (SystemUtils.IS_OS_WINDOWS){
-                ZipUtil.zip(doc.outerHtml().getBytes(StandardCharsets.UTF_8),"C:\\Users\\Kafein\\Downloads\\data\\",fileUUID);
-            }else if(SystemUtils.IS_OS_LINUX){
-                ZipUtil.zip(doc.outerHtml().getBytes(StandardCharsets.UTF_8),"/home/ec2-user/data/",fileUUID);
-            }
-//            try (FileOutputStream writer = new FileOutputStream(new File(subPageErrors.getHtmlPath()))) {
-//                writer.write(doc.outerHtml().getBytes());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+                ZipUtil.zip(doc.outerHtml().getBytes(StandardCharsets.UTF_8),fileStoragePath,fileUUID);
         }
         log.info("Accessibility test for " + (!StringUtils.isEmpty(subUrl) ? subUrl:website.getAddress()) +
                 " took " + (System.currentTimeMillis()-startTime)/1000 + " seconds.");

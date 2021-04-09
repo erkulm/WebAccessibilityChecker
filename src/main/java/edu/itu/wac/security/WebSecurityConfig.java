@@ -24,6 +24,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter { // (1)
     @Autowired
     UserService userService;
 
+    @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService);
     }
@@ -54,6 +55,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter { // (1)
                 .headers().frameOptions().disable()
                 .addHeaderWriter(new StaticHeadersWriter(
                         "X-FRAME-OPTIONS", "ALLOW-FROM localhost:8080"));
+
+        http
+                .requiresChannel()
+                .anyRequest()
+                .requiresSecure();
 
     }
 }

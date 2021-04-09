@@ -5,14 +5,12 @@ import edu.itu.wac.entity.ErrorReport;
 import edu.itu.wac.entity.SubPageErrors;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.etc.LogExecutionTime;
-import edu.itu.wac.repository.ErrorRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,9 +29,6 @@ public class Pa11yUtil {
 
     @Value("${file.storage.path:/usr/mahmut/Downloads/data/}")
     private static String fileStoragePath;
-
-    @Autowired
-    ErrorRepository errorRepository;
 
     @LogExecutionTime
     public static ErrorReport runPa11y(Website website, String subUrl) {
@@ -111,7 +106,7 @@ public class Pa11yUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           log.error(ExceptionUtils.getStackTrace(e));
         }
         errorReport.setWebsite(website);
         errorReport.setNumberOfSubPages(1);
@@ -126,7 +121,7 @@ public class Pa11yUtil {
         String location = "/Users/mahmut/Downloads/data/";
         if (SystemUtils.IS_OS_WINDOWS){
             location = "C:\\Users\\Kafein\\Downloads\\data\\";
-        }if (SystemUtils.IS_OS_LINUX){
+        }else if (SystemUtils.IS_OS_LINUX){
             location = "/home/ec2-user/data/";
         }
         subPageErrors.setHtmlPath(

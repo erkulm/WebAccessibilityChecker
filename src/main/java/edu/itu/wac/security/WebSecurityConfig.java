@@ -12,6 +12,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity // (1)
@@ -29,12 +35,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter { // (1)
     auth.userDetailsService(userService);
   }
 
+  @Bean
+  protected CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:8081"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+
   @Override
   protected void configure(HttpSecurity http) throws Exception { // (2)
-    http.authorizeRequests()
+    http.csrf()
+        .disable()
+        .cors()
+        .and()
+        .authorizeRequests()
         .antMatchers("/admin/**")
         .hasRole("ADMIN")
         .antMatchers("/login*")
+        .permitAll()
+        .antMatchers("**")
         .permitAll()
         .antMatchers("/images/**")
         .permitAll()
@@ -50,8 +72,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter { // (1)
         .logout()
         .logoutUrl("/perform_logout")
         .deleteCookies("JSESSIONID");
-
-    http.cors().and().csrf().disable();
 
     http.headers()
         .frameOptions()

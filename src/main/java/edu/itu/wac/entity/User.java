@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Document
 @Data
 public class User {
@@ -11,4 +13,5 @@ public class User {
     String id;
     String username;
     String password;
+    List<Permission> permissions;
 }

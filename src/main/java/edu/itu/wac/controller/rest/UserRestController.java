@@ -3,46 +3,80 @@ package edu.itu.wac.controller.rest;
 import edu.itu.wac.service.UserService;
 import edu.itu.wac.service.request.UserRequest;
 import edu.itu.wac.service.response.UserResponse;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 public class UserRestController {
-  private final UserService userService;
-  private final MapperFacade mapperFacade;
+    private final UserService userService;
 
-  @Autowired
-  public UserRestController(
-      UserService userService, @Qualifier(value = "userServiceMapper") MapperFacade mapperFacade) {
-    this.userService = userService;
-    this.mapperFacade = mapperFacade;
-  }
-
-  @ApiOperation(value = "Insert User", notes = "User definition<br/>")
-  @GetMapping("insert-user")
-  public ResponseEntity<UserResponse> insert(
-      @ApiParam(value = "FareRate save request") @RequestParam String username,
-      @RequestParam String password) {
-
-    if (!StringUtils.isEmpty(username) && !StringUtils.isEmpty(password)) {
-
-      UserRequest userRequest = new UserRequest();
-      userRequest.setPassword(password);
-      userRequest.setUsername(username);
-
-      UserResponse userResponse = userService.save(userRequest);
-      return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
-    } else {
-      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @Autowired
+    public UserRestController(UserService userService) {
+        this.userService = userService;
     }
-  }
+
+    @PostMapping("insert")
+    public ResponseEntity<UserResponse> insert(@RequestBody UserRequest userRequest) {
+
+        if (!StringUtils.isEmpty(userRequest.getUsername())
+                && !StringUtils.isEmpty(userRequest.getPassword())) {
+            UserResponse userResponse = userService.save(userRequest);
+            return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("get/{id}")
+    public ResponseEntity<UserResponse> get(@PathVariable String id) {
+        UserResponse user = userService.getById(id);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("get-all")
+    public ResponseEntity<List<UserResponse>> getAll() {
+        List<UserResponse> userResponses = userService.getAll();
+        return new ResponseEntity<>(userResponses, HttpStatus.OK);
+    }
+
+    @PutMapping("update")
+    public ResponseEntity<UserResponse>
+    update(@Valid @RequestBody UserRequest userRequest) {
+
+        UserResponse userResponse = userService.getById(userRequest.getId());
+        if (userResponse==null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if (!StringUtils.isEmpty(userRequest.getPassword()) && !StringUtils.isEmpty(userRequest.getUsername())) {
+
+            UserResponse newUserResponse = userService.save(userRequest);
+            return new ResponseEntity<>(newUserResponse, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable String id) {
+        UserResponse user = userService.getById(id);
+
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        userService.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

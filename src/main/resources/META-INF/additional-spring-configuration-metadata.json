@@ -26,8 +26,8 @@
       "description": "Description for accessibility.job.cron."
     },
     {
-      "name": "acceessibility.job.websites",
+      "name": "accessibility.job.websites",
       "type": "java.lang.String",
-      "description": "Description for acceessibility.job.websites."
+      "description": "Description for accessibility.job.websites."
     }
   ] }

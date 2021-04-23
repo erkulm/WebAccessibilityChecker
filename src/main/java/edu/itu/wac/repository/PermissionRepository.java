@@ -1,7 +1,7 @@
 package edu.itu.wac.repository;
 
 import edu.itu.wac.entity.Permission;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PermissionRepository extends MongoRepository<Permission, String> {
+public interface PermissionRepository extends JpaRepository<Permission, String> {
 }

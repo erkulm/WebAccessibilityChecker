@@ -48,6 +48,7 @@ public class Pa11yUtil {
         ErrorReport errorReport = new ErrorReport();
         SubPageErrors subPageErrors = new SubPageErrors();
         subPageErrors.setSubPage(!StringUtils.isEmpty(subUrl) ? subUrl : website.getAddress());
+        subPageErrors.setErrorReport(errorReport);
         errorReport.getSubPageErrors().add(subPageErrors);
         int lineCounter = 0;
         int counter = 0;
@@ -104,8 +105,10 @@ public class Pa11yUtil {
                     } else if (counter == 3) {
                         errorScene = line.substring(7);
                         counter = 0;
-                        subPageErrors.getErrors().add(getErrorList(website, subUrl, errorDecs,
-                                errorScene, errorAddress, document));
+                        Error error = getError(website, subUrl, errorDecs,
+                                errorScene, errorAddress, document);
+                        error.setSubPageErrors(subPageErrors);
+                        subPageErrors.getErrors().add(error);
                     }
                 }
             }
@@ -134,9 +137,9 @@ public class Pa11yUtil {
         return errorReport;
     }
 
-    private static Error getErrorList(Website website, String subUrl,
-                                      String errorDesc, String errorScene,
-                                      String errorAddress, String document) {
+    private static Error getError(Website website, String subUrl,
+                                  String errorDesc, String errorScene,
+                                  String errorAddress, String document) {
         Error error = new Error();
         error.setWebsite(website);
         error.setSubPage(!StringUtils.isEmpty(subUrl) ? subUrl : website.getAddress());

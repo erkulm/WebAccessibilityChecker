@@ -2,23 +2,26 @@ package edu.itu.wac.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.hibernate.annotations.GenericGenerator;
 
-@Document
-@TypeAlias("category")
-@Data
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Table
+@Entity
 @NoArgsConstructor
+@Data
 public class WebsiteCategory {
-    @Id
-    private String id;
-    @Indexed(unique = true)
-    private String name;
-    private String description;
+  @Id
+  @GeneratedValue(generator="system-uuid")
+  @GenericGenerator(name="system-uuid", strategy = "uuid")  private String id;
 
-    public WebsiteCategory(String name){
-        this.name = name;
-    }
+  private String name;
+  private String description;
+
+  public WebsiteCategory(String name) {
+    this.name = name;
+  }
 }

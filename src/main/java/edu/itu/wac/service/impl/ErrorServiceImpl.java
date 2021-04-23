@@ -6,9 +6,9 @@ import edu.itu.wac.entity.Website;
 import edu.itu.wac.enums.ErrorExcelHeaders;
 import edu.itu.wac.etc.LogExecutionTime;
 import edu.itu.wac.job.Pa11yExecutor;
-import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.repository.ErrorRepository;
 import edu.itu.wac.repository.SubPageErrorsRepository;
+import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.service.ErrorService;
 import edu.itu.wac.service.WebsiteService;
 import edu.itu.wac.service.request.ErrorRequest;
@@ -109,8 +109,7 @@ public class ErrorServiceImpl implements ErrorService {
                     .stream()
                     .flatMap(spe -> spe.getErrors().stream())
                     .collect(Collectors.toList());
-            errorRepository.saveAll(errors);
-            subPageErrorsRepository.saveAll(errorReport.getSubPageErrors());
+            errorReportService.save(errorReport);
             errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
             errorReport.setTotalErrors(errors.size());
             errorReport.setReportGenerationTime(System.currentTimeMillis()-startTime);
@@ -136,7 +135,7 @@ public class ErrorServiceImpl implements ErrorService {
             Website website = mapperFacade.map(websiteResponse, Website.class);
             ErrorReport errorReport = pa11yExecutor.executePally(
                     website);
-
+            errorReport.getSubPageErrors().forEach(spe->spe.setErrorReport(errorReport));
             errorResponses = saveErrorReport(website, startTime, errorReport);
             websiteService.updateLatestTestDate(address);
         } else {
@@ -152,8 +151,6 @@ public class ErrorServiceImpl implements ErrorService {
                 .stream()
                 .flatMap(spe -> spe.getErrors().stream())
                 .collect(Collectors.toList());
-        errorRepository.saveAll(errors);
-        subPageErrorsRepository.saveAll(errorReport.getSubPageErrors());
         errorReport.setWebsite(website);
         errorResponses = mapperFacade.mapAsList(errors, ErrorResponse.class);
         errorReport.setTotalErrors(errors.size());

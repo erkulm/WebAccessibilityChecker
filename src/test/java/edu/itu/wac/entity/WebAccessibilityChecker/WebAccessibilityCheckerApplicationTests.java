@@ -1,3 +1,4 @@
+/*
 package edu.itu.wac.entity.WebAccessibilityChecker;
 
 import org.junit.jupiter.api.Test;
@@ -11,3 +12,4 @@ class WebAccessibilityCheckerApplicationTests {
 	}
 
 }
+*/

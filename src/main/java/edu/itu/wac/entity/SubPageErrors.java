@@ -1,18 +1,34 @@
 package edu.itu.wac.entity;
 
-import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Document
-@Data
+@Table
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class SubPageErrors {
-    @Id
-    String id;
-    String subPage;
-    String htmlPath;
-    List<Error> errors = new ArrayList<>();
+  @Id
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  String id;
+
+  @JsonIgnoreProperties(value = "subPageErrors")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "error_report_id", nullable = false)
+  ErrorReport errorReport;
+
+  String subPage;
+  String htmlPath;
+  @JsonIgnoreProperties(value = "subPageErrors")
+  @OneToMany(mappedBy = "subPageErrors", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  List<Error> errors = new ArrayList<>();
 }

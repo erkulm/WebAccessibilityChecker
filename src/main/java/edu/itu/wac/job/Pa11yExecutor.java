@@ -3,8 +3,6 @@ package edu.itu.wac.job;
 import edu.itu.wac.entity.ErrorReport;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.repository.WebsiteRepository;
-import edu.itu.wac.service.WebsiteService;
-import edu.itu.wac.service.response.WebsiteResponse;
 import edu.itu.wac.util.SubUrlUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,12 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -50,7 +44,7 @@ public class Pa11yExecutor implements Job {
     subUrls.forEach(subUrl -> addNewFutureTask(futureTasks, subUrl));
     futureTasks.forEach(executor::execute);
 
-//    waitIfNotAllTasksAreDone(futureTasks);
+    waitIfNotAllTasksAreDone(futureTasks);
     ErrorReport errorReport = new ErrorReport();
     errorReport.setNumberOfSubPages(subUrls.size());
     futureTasks.forEach(futureTask -> getPa11lResult(errorReport, futureTask));
@@ -67,7 +61,9 @@ public class Pa11yExecutor implements Job {
     } catch (InterruptedException | ExecutionException e) {
       log.error(ExceptionUtils.getStackTrace(e));
     }
-    errorReport.getSubPageErrors().addAll(partOfErrorReport.getSubPageErrors());
+    if (partOfErrorReport != null) {
+      errorReport.getSubPageErrors().addAll(partOfErrorReport.getSubPageErrors());
+    }
   }
 
   private void addNewFutureTask(List<FutureTask<ErrorReport>> futureTasks, String subUrl) {

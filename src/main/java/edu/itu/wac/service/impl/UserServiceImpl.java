@@ -35,8 +35,13 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public UserResponse findByUsername(String username) {
-    Optional<User> user = userRepository.findUserByUsername(username);
-    return user.map(value -> mapperFacade.map(value, UserResponse.class)).orElse(null);
+    User user = null;
+    try {
+      user = userRepository.findUserByUsername(username).orElseThrow(()->new Exception("User not found"));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return mapperFacade.map(user, UserResponse.class);
   }
 
   @Override

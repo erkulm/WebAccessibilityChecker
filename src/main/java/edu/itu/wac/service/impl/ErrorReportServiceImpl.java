@@ -69,15 +69,20 @@ public class ErrorReportServiceImpl implements ErrorReportService {
     return result;
   }
 
-    public List<ErrorReport> findByWebsiteAddressContaining(String address) {
-        List<WebsiteResponse> website = websiteService.findByAddressContaining(address);
-        if (!website.isEmpty()) {
-            return errorReportRepository.findAllByWebsiteIn(
-                    mapperFacade.mapAsList(website, Website.class));
-        } else {
-            return Collections.emptyList();
-        }
+  public List<ErrorReport> findByWebsiteAddressContaining(String address) {
+    List<WebsiteResponse> website;
+    if (address == null) {
+      website = websiteService.getAll();
+    } else {
+      website = websiteService.findByAddressContaining(address);
     }
+    if (!website.isEmpty()) {
+      return errorReportRepository.findAllByWebsiteIn(
+          mapperFacade.mapAsList(website, Website.class));
+    } else {
+      return Collections.emptyList();
+    }
+  }
 
     @Override
     public ErrorReportResponse findById(String id) {

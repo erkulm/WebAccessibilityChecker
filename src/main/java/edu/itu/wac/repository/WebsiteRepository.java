@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface WebsiteRepository extends JpaRepository<Website, String> {
 
     Optional<Website> findByAddress(String address);
+    List<Website> findByAddressContaining(String address);
     List<Website> findByAddressIn(List<String> addresses);
     List<Website> findAll();
 }

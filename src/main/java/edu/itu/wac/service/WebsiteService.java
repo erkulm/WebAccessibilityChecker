@@ -10,6 +10,9 @@ import java.util.List;
 public interface WebsiteService {
     WebsiteResponse save(WebsiteRequest websiteRequest);
     WebsiteResponse findByAddress(String address);
+
+    List<WebsiteResponse> findByAddressContaining(String address);
+
     WebsiteResponse createNewWebsiteFromAddress(String address);
     WebsiteResponse updateLatestTestDate(String address);
     List<WebsiteResponse> getAll();

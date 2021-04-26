@@ -46,6 +46,11 @@ public class ErrorReportServiceImpl implements ErrorReportService {
     }
 
     @Override
+    public List<ErrorReportWithoutSubpagesResponse> getAllWithoutSubpageInfo() {
+        return mapperFacade.mapAsList(errorReportRepository.findAll(), ErrorReportWithoutSubpagesResponse.class);
+    }
+
+    @Override
     public List<ErrorReportResponse> findByWebsiteAddress(String address) {
       List<ErrorReportResponse> result = new ArrayList<>();
       List<ErrorReport> reportsByWebsiteContaining = findByWebsiteAddressContaining(address);
@@ -95,22 +100,29 @@ public class ErrorReportServiceImpl implements ErrorReportService {
         Optional<ErrorReport> errorReportOptional = errorReportRepository.findById(id);
         if (errorReportOptional.isPresent()) {
             ErrorReport errorReport = errorReportOptional.get();
-            List<Error> errors = errorReport.getSubPageErrors()
-                    .stream()
-                    .flatMap(spe -> spe.getErrors().stream())
-                    .collect(Collectors.toList());
-            Map<String, List<Error>> groupedErrors
-                    = errors.stream().collect(Collectors.groupingBy(Error::getErrorDesc));
-            for (int i = 0; i < 10; i++) {
-                ErrorCountInfo errorCountInfo = getErrorCountInfo(groupedErrors);
-                if (errorCountInfo != null) {
-                    errorCountInfoList.add(errorCountInfo);
-                }
-            }
-            errorCountInfoList.sort(Comparator.comparing(ErrorCountInfo::getErrorCount).reversed());
+            errorCountInfoList = getErrorCountInfoByReport(errorReport);
             return errorCountInfoList;
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public List<ErrorCountInfo> getErrorCountInfoByReport(ErrorReport errorReport) {
+        List<ErrorCountInfo> errorCountInfoList = new ArrayList<>();
+        List<Error> errors = errorReport.getSubPageErrors()
+                .stream()
+                .flatMap(spe -> spe.getErrors().stream())
+                .collect(Collectors.toList());
+        Map<String, List<Error>> groupedErrors
+                = errors.stream().collect(Collectors.groupingBy(Error::getErrorDesc));
+        for (int i = 0; i < 10; i++) {
+            ErrorCountInfo errorCountInfo = getErrorCountInfo(groupedErrors);
+            if (errorCountInfo != null) {
+                errorCountInfoList.add(errorCountInfo);
+            }
+        }
+        errorCountInfoList.sort(Comparator.comparing(ErrorCountInfo::getErrorCount).reversed());
+        return errorCountInfoList;
     }
 
     @Override

@@ -15,6 +15,8 @@ public interface ErrorReportService {
 
     List<ErrorReportResponse> getAll();
 
+    List<ErrorReportWithoutSubpagesResponse> getAllWithoutSubpageInfo();
+
     List<ErrorReportResponse> findByWebsiteAddress(String address);
 
     List<ErrorReportWithoutSubpagesResponse> findByWebsiteAddressWithoutSubpages(String address);
@@ -22,6 +24,8 @@ public interface ErrorReportService {
     ErrorReportResponse findById(String id);
 
     List<ErrorCountInfo> getErrorCountInfo(String id);
+
+    List<ErrorCountInfo> getErrorCountInfoByReport(ErrorReport errorReport);
 
     List<ComparisonResult> getComparisonData(ComparisonRequest comparisonRequest);
 

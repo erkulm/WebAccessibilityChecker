@@ -11,7 +11,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -75,6 +74,11 @@ public class DetailController {
             }
         }
 
+        if (!errorDefList.isEmpty()){
+            String reportId = errorService.findErrorReportByErrorId(errorDefList.iterator().next().getId());
+            model.addObject("report_id", reportId);
+        }
+
         String pageHtml = doc.outerHtml();
         Document docHtml = Jsoup.parse(pageHtml);
 
@@ -84,7 +88,6 @@ public class DetailController {
         model.addObject("html", docHtml);
         model.addObject("pageHtml", pageHtml);
 
-        model.addObject("message", "Hello World");
         return model;
     }
 

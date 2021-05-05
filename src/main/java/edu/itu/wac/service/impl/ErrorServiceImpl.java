@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -157,6 +158,12 @@ public class ErrorServiceImpl implements ErrorService {
         errorReport.setReportGenerationTime(System.currentTimeMillis()- startTime);
         errorReportService.save(errorReport);
         return errorResponses;
+    }
+
+    @Override
+    public String findErrorReportByErrorId(String id) {
+        Optional<Error> byId = errorRepository.findById(id);
+        return byId.map(error -> error.getSubPageErrors().getErrorReport().getId()).orElse(null);
     }
 
     @Override

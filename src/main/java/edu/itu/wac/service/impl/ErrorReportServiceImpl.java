@@ -96,7 +96,7 @@ public class ErrorReportServiceImpl implements ErrorReportService {
 
     @Override
     public List<ErrorCountInfo> getErrorCountInfo(String id) {
-        List<ErrorCountInfo> errorCountInfoList = new ArrayList<>();
+        List<ErrorCountInfo> errorCountInfoList;
         Optional<ErrorReport> errorReportOptional = errorReportRepository.findById(id);
         if (errorReportOptional.isPresent()) {
             ErrorReport errorReport = errorReportOptional.get();

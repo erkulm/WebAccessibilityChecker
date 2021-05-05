@@ -3,9 +3,7 @@ package edu.itu.wac.service;
 import edu.itu.wac.entity.ErrorReport;
 import edu.itu.wac.entity.Website;
 import edu.itu.wac.service.request.ErrorRequest;
-import edu.itu.wac.service.request.WebsiteRequest;
 import edu.itu.wac.service.response.ErrorResponse;
-import edu.itu.wac.service.response.WebsiteResponse;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +23,8 @@ public interface ErrorService {
     List<ErrorResponse> generateDeepReport(String address, Boolean isHtmlHistoryEnabled);
 
     List<ErrorResponse> saveErrorReport(Website website, long startTime, ErrorReport errorReport);
+
+    String findErrorReportByErrorId(String id);
 
     Workbook generateExcel(List<ErrorResponse> items);
 }

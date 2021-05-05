@@ -116,7 +116,7 @@
 
 			<div>
 				<form action="more" method="get">
-					<button type="submit" class="btn btn-secondary mt-3 float-right">More Detail</button>
+					<a href="full-error-details?id=${report_id}" class="btn btn-secondary mt-3 float-right">More Detail</a>
 				</form>
 			</div>
 		</div>

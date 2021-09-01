@@ -61,7 +61,7 @@ public class Pa11yUtil {
         Process pally = null;
         if (SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_LINUX) {
             try {
-                pally = Runtime.getRuntime().exec(pa11yPath + website.getAddress());
+                pally = Runtime.getRuntime().exec(pa11yPath + " " +  website.getAddress());
             } catch (IOException e) {
                 log.error(ExceptionUtils.getStackTrace(e));
             }

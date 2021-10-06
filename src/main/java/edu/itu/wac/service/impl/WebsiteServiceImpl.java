@@ -4,11 +4,8 @@ import edu.itu.wac.entity.Website;
 import edu.itu.wac.entity.WebsiteCategory;
 import edu.itu.wac.repository.WebsiteCategoryRepository;
 import edu.itu.wac.repository.WebsiteRepository;
-import edu.itu.wac.service.WebsiteCategoryService;
 import edu.itu.wac.service.WebsiteService;
-import edu.itu.wac.service.request.WebsiteCategoryRequest;
 import edu.itu.wac.service.request.WebsiteRequest;
-import edu.itu.wac.service.response.WebsiteCategoryResponse;
 import edu.itu.wac.service.response.WebsiteResponse;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +42,12 @@ public class WebsiteServiceImpl implements WebsiteService {
     public WebsiteResponse findByAddress(String address) {
         Optional<Website> website = websiteRepository.findByAddress(address);
         return mapperFacade.map(website.orElse(null), WebsiteResponse.class);
+    }
+
+    @Override
+    public List<WebsiteResponse> findByAddressContaining(String address) {
+        List<Website> website = websiteRepository.findByAddressContaining(address);
+        return mapperFacade.mapAsList(website, WebsiteResponse.class);
     }
 
     @Override

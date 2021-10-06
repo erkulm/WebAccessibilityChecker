@@ -2,7 +2,7 @@ package edu.itu.wac.controller.web;
 
 import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.service.WebsiteService;
-import edu.itu.wac.service.response.ErrorReportResponse;
+import edu.itu.wac.service.response.ErrorReportWithoutSubpagesResponse;
 import edu.itu.wac.service.response.WebsiteResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -38,50 +38,62 @@ public class HistoryController {
     model.setViewName("history");
     log.info(website);
 
-    List<ErrorReportResponse> errorReports = errorReportService.findByWebsiteAddress(website);
+    List<ErrorReportWithoutSubpagesResponse> errorReports =
+            errorReportService.findByWebsiteAddressWithoutSubpages(website);
     List<String> websites =
         websiteService.getAll().stream()
             .map(WebsiteResponse::getAddress)
             .collect(Collectors.toList());
 
     if (!StringUtils.isEmpty(sort)) {
-      if ("date_asc".equals(sort)) {
-        errorReports.sort(Comparator.comparing(ErrorReportResponse::getCreatedDate).reversed());
-      } else if ("date_desc".equals(sort)) {
-        errorReports.sort(Comparator.comparing(ErrorReportResponse::getCreatedDate));
-      } else if ("error_asc".equals(sort)) {
-        errorReports.sort(Comparator.comparing(ErrorReportResponse::getTotalErrors));
-      } else {
-        errorReports.sort(Comparator.comparing(ErrorReportResponse::getTotalErrors).reversed());
+      switch (sort) {
+        case "date_asc":
+          errorReports.sort(Comparator.comparing(ErrorReportWithoutSubpagesResponse::getCreatedDate).reversed());
+          break;
+        case "date_desc":
+          errorReports.sort(Comparator.comparing(ErrorReportWithoutSubpagesResponse::getCreatedDate));
+          break;
+        case "error_asc":
+          errorReports.sort(Comparator.comparing(ErrorReportWithoutSubpagesResponse::getTotalErrors));
+          break;
+        default:
+          errorReports.sort(Comparator.comparing(ErrorReportWithoutSubpagesResponse::getTotalErrors).reversed());
+          break;
       }
     }
 
     if (!StringUtils.isEmpty(filter)) {
-      if ("last_week".equals(filter)) {
-        errorReports =
-            errorReports.stream()
-                .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusWeeks(1)))
-                .collect(Collectors.toList());
-      } else if ("last_month".equals(filter)) {
-        errorReports =
-            errorReports.stream()
-                .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusMonths(1)))
-                .collect(Collectors.toList());
-      } else if ("six_months".equals(filter)) {
-        errorReports =
-            errorReports.stream()
-                .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusMonths(6)))
-                .collect(Collectors.toList());
-      } else if ("last_year".equals(filter)) {
-        errorReports =
-            errorReports.stream()
-                .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusYears(1)))
-                .collect(Collectors.toList());
-      } else {
-        errorReports =
-            errorReports.stream()
-                .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusYears(2)))
-                .collect(Collectors.toList());
+      switch (filter) {
+        case "last_week":
+          errorReports =
+                  errorReports.stream()
+                          .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusWeeks(1)))
+                          .collect(Collectors.toList());
+          break;
+        case "last_month":
+          errorReports =
+                  errorReports.stream()
+                          .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusMonths(1)))
+                          .collect(Collectors.toList());
+          break;
+        case "six_months":
+          errorReports =
+                  errorReports.stream()
+                          .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusMonths(6)))
+                          .collect(Collectors.toList());
+          break;
+        case "last_year":
+          errorReports =
+                  errorReports.stream()
+                          .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusYears(1)))
+                          .collect(Collectors.toList());
+          break;
+        default:
+          errorReports =
+                  errorReports.stream()
+                          .filter(er -> er.getCreatedDate().isAfter(LocalDateTime.now().minusYears(2)))
+                          .collect(Collectors.toList());
+          break;
       }
     }
 

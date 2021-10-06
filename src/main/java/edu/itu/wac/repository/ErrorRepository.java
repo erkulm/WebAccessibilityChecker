@@ -1,12 +1,12 @@
 package edu.itu.wac.repository;
 
 import edu.itu.wac.entity.Error;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface ErrorRepository extends MongoRepository<Error, String> {
+public interface ErrorRepository extends JpaRepository<Error, String> {
 
     List<Error> findAllByWebsite_Address(String websiteAddress);
     List<Error> findAll();

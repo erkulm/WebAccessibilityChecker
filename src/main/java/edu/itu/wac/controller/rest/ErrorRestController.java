@@ -1,6 +1,5 @@
 package edu.itu.wac.controller.rest;
 
-import edu.itu.wac.entity.Error;
 import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.service.ErrorService;
 import edu.itu.wac.service.SubPageErrorsService;
@@ -8,7 +7,6 @@ import edu.itu.wac.service.response.ErrorReportResponse;
 import edu.itu.wac.service.response.ErrorResponse;
 import edu.itu.wac.service.response.SubPageErrorsResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.*;
-import java.net.URI;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -113,7 +109,7 @@ public class ErrorRestController {
         try{
           File file = new File(fileAddress);
           InputStream inputStream = new FileInputStream(file);
-          bytes = IOUtils.toByteArray(inputStream);
+//          bytes = IOUtils.toByteArray(inputStream);
           inputStream.close();
         }catch (Exception e){
           log.error(ExceptionUtils.getStackTrace(e));

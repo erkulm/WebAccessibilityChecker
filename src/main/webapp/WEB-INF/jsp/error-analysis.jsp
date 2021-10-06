@@ -133,7 +133,7 @@
 
 </head>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
 
 <script type="text/javascript">
 
@@ -334,7 +334,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="main-card mb-3 card">
                 <div class="card-body">
                     <h5 class="card-title">MOST RECURRING ERRORS</h5>
@@ -342,7 +342,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-8">
             <table>
                 <tr>
                     <div><a href="https://www.w3.org/WAI/WCAG20/versions/guidelines/wcag20-guidelines-20081211-a4.pdf"
@@ -398,16 +398,11 @@
                     <h5 class="card-title">Websites to Compare</h5>
                 </div>
                 <div>
-                    <p2 style="color:red">Maximum number of 4 websites can be compared</p2>
+                    <p2 style="color:red">Maximum number of 3 websites can be compared</p2>
                 </div>
                 <div class="card-header-tab card-header">
                     <ul class="nav">
                         <li class="nav-item"><a data-toggle="tab" href="#tab-eg5-0" class="active nav-link">All Websites</a><label id="label-eg5-0" class="customLabel">2</label>
-                        <li class="nav-item"><a data-toggle="tab" href="#tab-eg5-1" class="nav-link">Sektördeki
-                            Websiteler</a><label id="label-eg5-1" class="customLabel">1</label>
-                        <li class="nav-item"><a data-toggle="tab" href="#tab-eg5-2"
-                                                class="nav-link">${website}</a><label id="label-eg5-2"
-                                                                                      class="customLabel">3</label>
                     </ul>
                 </div>
                 <div class="card-body">

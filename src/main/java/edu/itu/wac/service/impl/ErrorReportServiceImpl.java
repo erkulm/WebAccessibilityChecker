@@ -2,21 +2,16 @@ package edu.itu.wac.service.impl;
 
 import edu.itu.wac.entity.Error;
 import edu.itu.wac.entity.ErrorReport;
-import edu.itu.wac.job.Pa11yExecutor;
+import edu.itu.wac.entity.Website;
 import edu.itu.wac.repository.ErrorReportRepository;
-import edu.itu.wac.repository.ErrorRepository;
 import edu.itu.wac.service.ErrorReportService;
 import edu.itu.wac.service.WebsiteService;
 import edu.itu.wac.service.request.ComparisonRequest;
-import edu.itu.wac.service.response.ComparisonResult;
-import edu.itu.wac.service.response.ErrorCountInfo;
-import edu.itu.wac.service.response.ErrorReportResponse;
-import edu.itu.wac.service.response.WebsiteResponse;
+import edu.itu.wac.service.response.*;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -28,9 +23,7 @@ import java.util.stream.StreamSupport;
 @Service
 public class ErrorReportServiceImpl implements ErrorReportService {
     private final WebsiteService websiteService;
-    private final ErrorRepository errorRepository;
     private final ErrorReportRepository errorReportRepository;
-    private final Pa11yExecutor pa11yExecutor;
     private final MapperFacade mapperFacade;
 
     @Value("${test.min.day.difference}")
@@ -38,14 +31,10 @@ public class ErrorReportServiceImpl implements ErrorReportService {
 
     @Autowired
     public ErrorReportServiceImpl(WebsiteService websiteService,
-                                  ErrorRepository errorRepository,
                                   ErrorReportRepository errorReportRepository,
-                                  Pa11yExecutor pa11yExecutor,
                                   @Qualifier(value = "errorReportServiceMapper") MapperFacade mapperFacade) {
         this.websiteService = websiteService;
-        this.errorRepository = errorRepository;
         this.errorReportRepository = errorReportRepository;
-        this.pa11yExecutor = pa11yExecutor;
         this.mapperFacade = mapperFacade;
     }
 
@@ -57,19 +46,48 @@ public class ErrorReportServiceImpl implements ErrorReportService {
     }
 
     @Override
-    public List<ErrorReportResponse> findByWebsiteAddress(String address) {
-        WebsiteResponse website = websiteService.findByAddress(address);
-        if (website != null) {
-//            return getAll().stream()
-//                    .filter(er->website.getAddress().equalsIgnoreCase(address))
-//                    .collect(Collectors.toList());
-            List<ErrorReport> errorReports = errorReportRepository.findAllByWebsite_Id(
-                    website.getId());
-            return mapperFacade.mapAsList(errorReports, ErrorReportResponse.class);
-        } else {
-            return null;
-        }
+    public List<ErrorReportWithoutSubpagesResponse> getAllWithoutSubpageInfo() {
+        return mapperFacade.mapAsList(errorReportRepository.findAll(), ErrorReportWithoutSubpagesResponse.class);
     }
+
+    @Override
+    public List<ErrorReportResponse> findByWebsiteAddress(String address) {
+      List<ErrorReportResponse> result = new ArrayList<>();
+      List<ErrorReport> reportsByWebsiteContaining = findByWebsiteAddressContaining(address);
+      if (reportsByWebsiteContaining != null) {
+        result =
+                mapperFacade.mapAsList(
+                        reportsByWebsiteContaining, ErrorReportResponse.class);
+      }
+      return result;
+    }
+
+  @Override
+  public List<ErrorReportWithoutSubpagesResponse> findByWebsiteAddressWithoutSubpages(String address) {
+    List<ErrorReportWithoutSubpagesResponse> result = new ArrayList<>();
+    List<ErrorReport> reportsByWebsiteContaining = findByWebsiteAddressContaining(address);
+    if (reportsByWebsiteContaining != null) {
+      result =
+          mapperFacade.mapAsList(
+              reportsByWebsiteContaining, ErrorReportWithoutSubpagesResponse.class);
+      }
+    return result;
+  }
+
+  public List<ErrorReport> findByWebsiteAddressContaining(String address) {
+    List<WebsiteResponse> website;
+    if (address == null) {
+      website = websiteService.getAll();
+    } else {
+      website = websiteService.findByAddressContaining(address);
+    }
+    if (!website.isEmpty()) {
+      return errorReportRepository.findAllByWebsiteIn(
+          mapperFacade.mapAsList(website, Website.class));
+    } else {
+      return Collections.emptyList();
+    }
+  }
 
     @Override
     public ErrorReportResponse findById(String id) {
@@ -78,26 +96,33 @@ public class ErrorReportServiceImpl implements ErrorReportService {
 
     @Override
     public List<ErrorCountInfo> getErrorCountInfo(String id) {
-        List<ErrorCountInfo> errorCountInfoList = new ArrayList<>();
+        List<ErrorCountInfo> errorCountInfoList;
         Optional<ErrorReport> errorReportOptional = errorReportRepository.findById(id);
         if (errorReportOptional.isPresent()) {
             ErrorReport errorReport = errorReportOptional.get();
-            List<Error> errors = errorReport.getSubPageErrors()
-                    .stream()
-                    .flatMap(spe -> spe.getErrors().stream())
-                    .collect(Collectors.toList());
-            Map<String, List<Error>> groupedErrors
-                    = errors.stream().collect(Collectors.groupingBy(Error::getErrorDesc));
-            for (int i = 0; i < 10; i++) {
-                ErrorCountInfo errorCountInfo = getErrorCountInfo(groupedErrors);
-                if (errorCountInfo != null) {
-                    errorCountInfoList.add(errorCountInfo);
-                }
-            }
-            errorCountInfoList.sort(Comparator.comparing(ErrorCountInfo::getErrorCount).reversed());
+            errorCountInfoList = getErrorCountInfoByReport(errorReport);
             return errorCountInfoList;
         }
-        return null;
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<ErrorCountInfo> getErrorCountInfoByReport(ErrorReport errorReport) {
+        List<ErrorCountInfo> errorCountInfoList = new ArrayList<>();
+        List<Error> errors = errorReport.getSubPageErrors()
+                .stream()
+                .flatMap(spe -> spe.getErrors().stream())
+                .collect(Collectors.toList());
+        Map<String, List<Error>> groupedErrors
+                = errors.stream().collect(Collectors.groupingBy(Error::getErrorDesc));
+        for (int i = 0; i < 10; i++) {
+            ErrorCountInfo errorCountInfo = getErrorCountInfo(groupedErrors);
+            if (errorCountInfo != null) {
+                errorCountInfoList.add(errorCountInfo);
+            }
+        }
+        errorCountInfoList.sort(Comparator.comparing(ErrorCountInfo::getErrorCount).reversed());
+        return errorCountInfoList;
     }
 
     @Override
@@ -146,7 +171,6 @@ public class ErrorReportServiceImpl implements ErrorReportService {
             ErrorCountInfo errorCountInfo = new ErrorCountInfo();
             int temp = 0;
             Map.Entry<String, List<Error>> pairWithMostOccurrences = null;
-            Iterator<Map.Entry<String, List<Error>>> iterator = groupedErrors.entrySet().iterator();
             for (Map.Entry<String, List<Error>> pair : groupedErrors.entrySet()) {
                 if (pair.getValue().size() > temp) {
                     temp = pair.getValue().size();

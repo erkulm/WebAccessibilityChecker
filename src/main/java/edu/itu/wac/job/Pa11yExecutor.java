@@ -13,6 +13,7 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -32,12 +33,15 @@ public class Pa11yExecutor implements Job {
   Integer numberOfThreads;
 
   @Autowired WebsiteRepository websiteRepository;
+  @Autowired private KafkaTemplate<String, String> kafkaTemplate;
+
 
   public ErrorReport executePally(Website website) {
     this.website = website;
 
     List<String> subUrls = SubUrlUtil.getSubUrls(website);
 
+    subUrls.forEach(surl->kafkaTemplate.send("websites", surl));
     ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
 
     List<FutureTask<ErrorReport>> futureTasks = new ArrayList<>();
